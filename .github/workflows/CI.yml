@@ -35,9 +35,6 @@ jobs:
       run: chmod +x ./gradlew
       shell: bash
         
-    - name: Build with Gradle
-      uses: ./gradlew clean build
-        
     - name: Make zip file
       run: zip -r wontu-webserver *
       
