@@ -38,15 +38,10 @@ jobs:
     - name: Make zip file
       run: zip -r wontu-webserver *
       
-    - name: Move zip file to deploy folder
-      run: |
-        mkdir -p deploy
-        mv wontu-webserver.zip deploy/wontu-webserver.zip
-      
     - name: upload build file to NCP Object Storage
       env:
         NCP_ACCESS_KEY_ID: ${{ secrets.NCP_ACCESS_KEY_ID }}
         NCP_SECRET_KEY: ${{ secrets.NCP_SECRET_KEY }}
       run: |
-        aws --endpoint-url=https://kr.object.ncloudstorage.com s3 cp ./deploy/wontu-webserver.zip s3://wontu-object-storage-bucket
+        aws --endpoint-url=https://kr.object.ncloudstorage.com s3 cp wontu-webserver.zip s3://wontu-object-storage-bucket
         
