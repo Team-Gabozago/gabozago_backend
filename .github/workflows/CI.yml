@@ -1,0 +1,58 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+      shell: bash
+        
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+      with:
+        arguments: build
+        
+    - name: Make zip file
+      run: zip -r wontu-webserver *
+      
+    - name: Move zip file to deploy folder
+      run: |
+        mkdir -p deploy
+        mv wontu-webserver.zip deploy/wontu-webserver.zip
+      
+    - name: upload build file to NCP Object Storage
+      env:
+        NCP_ACCESS_KEY_ID: ${{ secrets.NCP_ACCESS_KEY_ID }}
+        NCP_SECRET_KEY: ${{ secrets.NCP_SECRET_KEY }}
+      run: |
+        aws --endpoint-url-https://kr.object.ncloudstorage.com
+        s3 cp --recursive deploy
+        s3://wontu-object-storage-bucket
+        
