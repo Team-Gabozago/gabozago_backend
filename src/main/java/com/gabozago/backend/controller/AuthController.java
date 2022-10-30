@@ -53,7 +53,7 @@ public class AuthController {
         }
 
         if (!passwordEncoder.matches(request.get("password"), user.getPassword())) {
-            return ResponseEntity.badRequest().body("password is not correct");
+            return new ResponseEntity<>("password is not correct", null, 401);
         }
 
         String jwtToken = tokenProvider.createToken(user.getId(), user.getRoles());
