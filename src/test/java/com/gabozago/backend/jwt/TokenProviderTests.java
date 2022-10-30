@@ -18,12 +18,32 @@ public class TokenProviderTests {
 
     @Test
     void testCreateToken() {
-        String token = tokenProvider.createToken("test", null);
+        String token = tokenProvider.createToken(1L, null);
     }
 
     @Test
     void testCreateTokenWithRoles() {
-        String token = tokenProvider.createToken("test", List.of("ROLE_USER"));
+        String token = tokenProvider.createToken(1L, List.of("ROLE_USER"));
+    }
+
+    @Test
+    void testGetUserID() {
+        String token = tokenProvider.createToken(1L, null);
+        Long userID = tokenProvider.getUserID(token);
+        assertEquals(1L, userID);
+    }
+
+    @Test
+    void testValidateToken() {
+        String token = tokenProvider.createToken(1L, null);
+        Boolean isValid = tokenProvider.validateToken(token);
+        assertEquals(true, isValid);
+    }
+
+    @Test
+    void testValidateTokenWithInvalidToken() {
+        Boolean isValid = tokenProvider.validateToken("invalid token");
+        assertEquals(false, isValid);
     }
 }
 

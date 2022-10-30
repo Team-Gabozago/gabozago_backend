@@ -22,8 +22,8 @@ public class TokenProvider {
         this.secretKey = Base64.getEncoder().encodeToString(secret.getBytes());
     }
 
-    public String createToken(String userID, List<String> roles) {
-        Claims claims = Jwts.claims().setSubject(userID);
+    public String createToken(Long userID, List<String> roles) {
+        Claims claims = Jwts.claims().setSubject(userID.toString());
         claims.put("roles", roles);
 
         // 7 days
@@ -35,5 +35,24 @@ public class TokenProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + tokenLifeTime))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+    }
+
+    public Long getUserID(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return Long.parseLong(claims.getSubject());
+    }
+
+    public Boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            logger.error("Invalid JWT token: {}", e.getMessage());
+        }
+        return false;
     }
 }
