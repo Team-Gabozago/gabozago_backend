@@ -46,7 +46,7 @@ jobs:
         NCP_ACCESS_KEY_ID: ${{ secrets.NCP_ACCESS_KEY_ID }}
         NCP_SECRET_KEY: ${{ secrets.NCP_SECRET_KEY }}
       run: |
-        aws --endpoint-url=https://kr.object.ncloudstorage.com 
-        s3 cp --recursive wontu-webserver.zip 
+        aws --endpoint-url=https://kr.object.ncloudstorage.com \
+        s3 cp --recursive wontu-webserver.zip \
         s3://wontu-object-storage-bucket
         
