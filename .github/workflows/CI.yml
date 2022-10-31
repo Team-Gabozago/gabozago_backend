@@ -43,8 +43,8 @@ jobs:
       
     - name: upload build file to NCP Object Storage
       env:
-        Access Key Id: ${{ secrets.NCP_ACCESS_KEY_ID }}
-        Secret Key: ${{ secrets.NCP_SECRET_KEY }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.NCP_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.NCP_SECRET_KEY }}
       run: |
         aws --endpoint-url=https://kr.object.ncloudstorage.com \
         s3 cp --recursive wontu-webserver.zip \
