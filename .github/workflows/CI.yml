@@ -35,9 +35,11 @@ jobs:
       run: chmod +x ./gradlew
       shell: bash
         
-    - name: Make zip file
+    - name: Make zip file and move to deploy directory
       run: |
         zip -r wontu-webserver *
+        mkdir -p deploy
+        mv wontu-webserver.zip deploy/wontu-webserver.zip
       
     - name: upload build file to NCP Object Storage
       env:
@@ -46,7 +48,7 @@ jobs:
     
       run: |
         aws --endpoint-url=https://kr.object.ncloudstorage.com \
-        s3 cp --recursive wontu-webserver.zip \
+        s3 cp --recursive deploy \
         --region ap-northeast-2 \
         s3://wontu-object-storage-bucket
         
