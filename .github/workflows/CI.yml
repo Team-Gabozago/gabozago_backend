@@ -19,7 +19,7 @@ permissions:
 jobs:
   build:
 
-    runs-on: ubuntu-22.04
+    runs-on: centOS 7.8
 
     steps:
     - name: Checkout
