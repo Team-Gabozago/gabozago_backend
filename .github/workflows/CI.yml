@@ -48,7 +48,7 @@ jobs:
 
       run: |
         aws --endpoint-url=https://kr.object.ncloudstorage.com \
-        s3 cp --recursive wontu-webserver.zip \
+        s3 cp --recursive deploy/wontu-webserver.zip \
         --region ap-northeast-2 \
         s3://wontu-object-storage-bucket
         
