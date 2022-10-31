@@ -72,7 +72,16 @@ public class TokenProvider {
             return null;
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserIdFromToken(token));
+        UserDetails userDetails;
+
+        try {
+            userDetails = userDetailsService.loadUserByUsername(this.getUserIdFromToken(token));
+        } catch (Exception e) {
+            logger.error("Get User Failed: {}", e.getMessage());
+
+            return null;
+        }
+
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
