@@ -76,5 +76,6 @@ jobs:
       run: |
         aws --endpoint-url=https://kr.object.ncloudstorage.com \
         deploy create-deployment \
+        --region ap-northeast-2 \
         --application-name wontu-code-deploy \
         --s3-location bucket=wontu-object-storage-bucket,key=wontu-webserver.zip,bundleType=zip
