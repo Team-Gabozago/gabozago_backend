@@ -51,3 +51,17 @@ jobs:
         --region ap-northeast-2 \
         s3://wontu-object-storage-bucket
         
+    - name: Copy appspec.yml
+      run: cp appspec.yml ./deploy
+      
+    - name: CodeDeploy
+      run: |
+        aws --endpoint-url=https://kr.object.ncloudstorage.com \
+        deploy create-deployment \
+        --application-name wontu-code-deploy \ # sourceDeploy에서 만든 애플리케이션이름
+        #--deployment-group-name springboot-with-githubaction-group \ # 배포 그룹 이름
+        --s3-location \ # Object Storage에 업로드 된 정보
+          bucket=wontu-object-storage-bucket, \
+          key=wontu-webserver.zip, \
+          bundleType=zip
+        
