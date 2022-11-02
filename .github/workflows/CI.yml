@@ -78,4 +78,5 @@ jobs:
         deploy create-deployment \
         --region ap-northeast-2 \
         --application-name wontu-code-deploy \
+        --deployment-group-name deploy-access-group \
         --s3-location bucket=wontu-object-storage-bucket,key=wontu-webserver.zip,bundleType=zip
