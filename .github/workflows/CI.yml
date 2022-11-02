@@ -64,10 +64,10 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         aws --endpoint-url=https://kr.object.ncloudstorage.com \
-        s3 cp \
+        s3 cp ./wontu-webserver.zip \
         --region ap-northeast-2 \
         --acl private \
-        ./wontu-webserver.zip
+        s3://wontu-object-storage-bucket
     
     # sourceDeploy에 배포 요청
     - name : request deploy to sourceDeploy
