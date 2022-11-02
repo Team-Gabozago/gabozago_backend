@@ -2,5 +2,5 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /root/deploy
+    destination: /root/server
     overwrite: yes
