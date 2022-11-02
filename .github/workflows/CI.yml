@@ -56,8 +56,7 @@ jobs:
       
     - name: CodeDeploy
       run: |
-        aws --endpoint-url=https://kr.object.ncloudstorage.com \
-        deploy create-deployment \
+        aws deploy create-deployment \
         --application-name wontu-code-deploy \
         --s3-location \
           bucket=wontu-object-storage-bucket, \
