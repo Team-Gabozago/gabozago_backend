@@ -37,21 +37,21 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
       
-    # Object Storage에 업로드할 파일만 모을 deploy 디렉터리 생성
-    - name: make deploy directory
-      run:  mkdir -p deploy
+    # Object Storage에 업로드할 파일만 모을 server 디렉터리 생성
+    - name: make server directory
+      run:  mkdir -p server
       
     # 1. Jar 파일 복사
     - name: Copy Jar
-      run: cp ./build/libs/*.jar ./deploy
+      run: cp ./build/libs/*.jar ./server
       
     # 3. script files 복사
     - name: Copy script
-      run: cp ./scripts/*.sh ./deploy
+      run: cp ./scripts/*.sh ./server
       
     # 파일 압축
-    - name: Make zip file and move to deploy directory
-      run: zip -r ./wontu-webserver.zip ./deploy
+    - name: Make zip file and move to server directory
+      run: zip -r ./wontu-webserver.zip ./server
       
     # S3에 업로드
     - name: upload build file to NCP Object Storage
