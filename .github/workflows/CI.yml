@@ -9,9 +9,9 @@ name: CI
 
 on:
   push:
-    branches: [ "savannah030/chore/cicd" ]
+    branches: [ "savannah/feature/cicd" ]
   pull_request:
-    branches: [ "savannah030/chore/cicd" ]
+    branches: [ "savannah/feature/cicd" ]
 
 permissions:
   contents: read
