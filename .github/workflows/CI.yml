@@ -66,8 +66,7 @@ jobs:
         aws --endpoint-url=https://kr.object.ncloudstorage.com \
         s3 cp ./wontu-webserver.zip \
         --region ap-northeast-2 \
-        --acl private \
-        s3://wontu-object-storage-bucket
+        s3://wontu-object-storage-bucke
     
     # sourceDeploy에 배포 요청
     - name : request deploy to sourceDeploy
