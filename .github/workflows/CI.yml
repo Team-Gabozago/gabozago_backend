@@ -9,9 +9,9 @@ name: CI
 
 on:
   push:
-    branches: [ "savannah030/chore/cicd" ]
+    branches: [ "savannah/feature/cicd" ]
   pull_request:
-    branches: [ "savannah030/chore/cicd" ]
+    branches: [ "savannah/feature/cicd" ]
 
 permissions:
   contents: read
@@ -19,10 +19,7 @@ permissions:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
-    env:
-      working-directory: ./
-      APPLICATION: ${{secrets.APPLICATION }}
+    runs-on: ubuntu-18.04
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -32,32 +29,10 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
-        
-    - name: Cache Gradle packages
-      uses: actions/cache@v2
-      with:
-        path: | 
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-        key: ${{runner.os}}-gradle-${{hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys:
-          ${{runner.os}}-gradle-
-          
-    - uses: actions/checkout@v2
-    - run: touch ./src/main/resources/application.yml
-    - run: echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml
-    - uses: actions/upload-artifact@v2
-      with:
-        name: application.yml
-        path: ./src/main/resources/application.yml
     
-        
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
       shell: bash
-      
-    - name: Test with Gradle
-      run: ./gradlew --info test
         
     - name: Make zip file and move to deploy directory
       run: |
@@ -75,4 +50,10 @@ jobs:
         s3 cp --recursive deploy \
         --region ap-northeast-2 \
         s3://wontu-object-storage-bucket
+        
+    - name: Copy appspec.yml
+      run: cp appspec.yml ./deploy
+      
+    - name: CodeDeploy
+      run: aws --endpoint-url=https://kr.object.ncloudstorage.com deploy create-deployment --application-name wontu-code-deploy --s3-location bucket=wontu-object-storage-bucket,key=wontu-webserver.zip,bundleType=zip
         
