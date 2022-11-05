@@ -1,6 +1,7 @@
 package com.gabozago.backend.jwt;
 
 import com.gabozago.backend.error.ErrorCode;
+import com.gabozago.backend.error.ErrorResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -19,11 +20,8 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
     private void setResponse(HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.getWriter().println("{ \"message\" : \"" + ErrorCode.UNAUTHORIZED.getMessage()
-                + "\", \"code\" : \"" +  ErrorCode.UNAUTHORIZED.getCode()
-                + "\", \"success\" : " + false
-                + "}");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().println(ErrorResponse.of(ErrorCode.UNAUTHORIZED).string());
     }
 
 }
