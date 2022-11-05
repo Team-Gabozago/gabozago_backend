@@ -1,6 +1,8 @@
 package com.gabozago.backend.controller;
 
 import com.gabozago.backend.entity.User;
+import com.gabozago.backend.error.ErrorCode;
+import com.gabozago.backend.error.ErrorResponse;
 import com.gabozago.backend.jwt.TokenProvider;
 import com.gabozago.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.Map;
 
 @RestController
@@ -33,9 +36,18 @@ public class AuthController {
 
     @PostMapping("/join")
     public ResponseEntity<String> join(@RequestBody Map<String, String> user) {
+        if (userService.checkExistsByEmail(user.get("email"))) {
+            return ErrorResponse.of(ErrorCode.DUPLICATED_EMAIL).entity();
+        }
+
+        if (userService.checkExistsByNickname(user.get("nickname"))) {
+            return ErrorResponse.of(ErrorCode.DUPLICATED_NICKNAME).entity();
+        }
+
         userService.save(User.builder()
                 .email(user.get("email"))
                 .password(passwordEncoder.encode(user.get("password")))
+                .roles(Collections.singletonList("ROLE_USER"))
                 .build());
 
         return ResponseEntity.ok("join success");
@@ -59,5 +71,10 @@ public class AuthController {
         String jwtToken = tokenProvider.createToken(user.getId(), user.getRoles());
 
         return ResponseEntity.ok(jwtToken);
+    }
+
+    @GetMapping("/needAuth")
+    public ResponseEntity<String> needAuth() {
+        return ResponseEntity.ok("auth success");
     }
 }

@@ -31,4 +31,12 @@ public class UserService implements UserDetailsService {
     public User findByEmail(String email) {
         return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+
+    public boolean checkExistsByEmail(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    public boolean checkExistsByNickname(String nickname) {
+        return userRepository.findByNickname(nickname).isPresent();
+    }
 }
