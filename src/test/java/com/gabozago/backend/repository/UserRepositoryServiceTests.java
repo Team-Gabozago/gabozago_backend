@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -39,9 +38,21 @@ public class UserRepositoryServiceTests {
 
         userRepository.save(user);
 
-        UserDetails userOptional = userRepository.findById(user.getId())
+        User userOptional = userRepository.findById(user.getId())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         assertEquals(userOptional.getUsername(), user.getUsername());
+    }
+
+    @Test
+    void testFindByNickname() {
+        User user = User.builder().username("user").nickname("test").password("password").build();
+
+        userRepository.save(user);
+
+        User userOptional = userRepository.findByNickname(user.getNickname())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        assertEquals(userOptional.getNickname(), "test");
     }
 }
