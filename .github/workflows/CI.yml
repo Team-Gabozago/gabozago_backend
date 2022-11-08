@@ -29,6 +29,16 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+          
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: | 
+              ~/.gradle/caches
+              ~/.gradle/wrapper
+          key: ${{runner.os}}-gradle-${{hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys:
+            ${{runner.os}}-gradle-
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
@@ -46,6 +56,9 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+        
+      - name: Test with Gradle
+        run: ./gradlew --info test
 
       # Object Storage에 업로드할 파일만 모을 server 디렉터리 생성
       - name: make server directory
