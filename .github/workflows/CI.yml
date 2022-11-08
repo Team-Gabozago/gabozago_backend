@@ -91,11 +91,11 @@ jobs:
         run: |
           chmod +x ./makeSignature.sh 
           SIGN=$(./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY)
-          echo ${{SIGN}}
+          echo ${SIGN}
 
       - name: GET projectList using curl
         run: |
-          echo ${{SIGN}}
+          echo ${SIGN}
           curl -i -X GET \
             -H "x-ncp-apigw-timestamp:1505290625682" \
             -H "x-ncp-iam-access-key:D78BB444D6D3C84CA38D" \
