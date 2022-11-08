@@ -93,7 +93,7 @@ jobs:
         with:
           url: 'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
           method: 'GET'
-          customHeaders: '{ "x-ncp-iam-access-key": ${{secrets.AWS_ACCESS_KEY_ID_DEPLOY}}, "x-ncp-apigw-signature-v2": ${{secrets.AWS_SECRET_ACCESS_KEY_DEPLOY}} }'
+          customHeaders: '{ "x-ncp-iam-access-key": ${{secrets.NCP_ACCESS_KEY_ID_DEPLOY}}, "x-ncp-apigw-signature-v2": ${{secrets.NCP_SECRET_ACCESS_KEY_DEPLOY}} }'
           
       - name: show response from GET projectList
         run: |
