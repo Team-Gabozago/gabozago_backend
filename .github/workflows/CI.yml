@@ -103,17 +103,16 @@ jobs:
           echo "SIGNATURE=$signature" >> $GITHUB_OUTPUT
           
 
-      #- name: make signature
-      #  id: extract
-      #  run: |
-      #    echo "TIMESTAMP=$(($(date +%s%N)/1000000))" >> $GITHUB_OUTPUT
-      #    message="GET https://sourcedeploy.apigw.ntruss.com/api/v1/project"$'\n'${{ steps.extract.outputs.TIMESTAMP }}$'\n'${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}
-      #    signature=$(echo -n -e "$message"|iconv -t utf8 |openssl dgst -sha256 -hmac ${{ secrets.NCP_SECRET_ACCESS_KEY_DEPLOY }} -binary|openssl enc -base64)
-      #    echo "SIGNATURE=$signature" >> $GITHUB_OUTPUT
+      - name: make signature ver2
+        run: |
+          message="GET https://sourcedeploy.apigw.ntruss.com/api/v1/project"$'\n'${{ steps.extract.outputs.TIMESTAMP }}$'\n'${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}
+          signature=$(echo -n -e "$message"|iconv -t utf8 |openssl dgst -sha256 -hmac ${{ secrets.NCP_SECRET_ACCESS_KEY_DEPLOY }} -binary|openssl enc -base64)
+          echo "SIGNATURE2=$signature" >> $GITHUB_OUTPUT
 
       - name: request deploy
         run: |
           echo ${{ steps.extract.outputs.SIGNATURE }}
+          echo ${{ steps.extract.outputs.SIGNATUR2 }}
           curl -i -X GET \
           -H "x-ncp-apigw-timestamp:"${{ steps.extract.outputs.TIMESTAMP }} \
           -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
