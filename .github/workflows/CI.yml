@@ -92,7 +92,7 @@ jobs:
 
       - id: extract2
         run: |
-          message="GET"+" "+"https://sourcedeploy.apigw.ntruss.com/api/v1/project"+"\\n${{ steps.extract.outputs.TIMESTAMP }}\\n${{ secrets.AWS_ACCESS_KEY_ID }}"
+          message="GET https://sourcedeploy.apigw.ntruss.com/api/v1/project\n${{ steps.extract.outputs.TIMESTAMP }}\n${{ secrets.AWS_ACCESS_KEY_ID }}"
           echo "MESSAGE=$message" >> $GITHUB_OUTPUT
 
       - id: extract3
@@ -106,7 +106,7 @@ jobs:
         run: |
           echo ${{ steps.extract3.outputs.SIGNATURE }}
           curl -i -X GET \
-          -H "x-ncp-apigw-timestamp:"${{ steps.extract.outputs.TIMESTAMP }} \
+          -H "x-ncp-apigw-timestamp:"${{ steps.extract1.outputs.TIMESTAMP }} \
           -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
-          -H "x-ncp-apigw-signature-v2:"${{ steps.extract.outputs.SIGNATURE}} \
+          -H "x-ncp-apigw-signature-v2:"${{ steps.extract3.outputs.SIGNATURE}} \
           'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
