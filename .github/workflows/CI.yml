@@ -93,7 +93,9 @@ jobs:
           chmod +x ./makeSignature.sh 
           OUTPUT=$(./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY)
           echo "${OUTPUT}"
-          echo "TIMESTAMP1=$OUTPUT" >> $GITHUB_OUTPUT
+          OUTPUT2=hi
+          echo "TIMESTAMP0=$OUTPUT" >> $GITHUB_OUTPUT
+          echo "TIMESTAMP1=$OUTPUT2" >> $GITHUB_OUTPUT
           echo "TIMESTAMP2=1505290625682" >> $GITHUB_OUTPUT
           echo "TIMESTAMP3='1505290625682'" >> $GITHUB_OUTPUT
           echo "SIGNATURE=$(echo ${OUTPUT[2]})" >> $GITHUB_OUTPUT
@@ -101,6 +103,7 @@ jobs:
 
       - name: request deploy
         run: |
+          echo ${{ steps.extract.outputs.TIMESTAMP0 }}
           echo ${{ steps.extract.outputs.TIMESTAMP1 }}
           echo ${{ steps.extract.outputs.TIMESTAMP2 }}
           echo ${{ steps.extract.outputs.TIMESTAMP3 }}
