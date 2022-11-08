@@ -73,3 +73,16 @@ jobs:
           s3 cp ./wontu-webserver.zip \
           --region ap-northeast-2 \
           s3://wontu-object-storage-bucket
+          
+      - name: GET projectList
+        id: getProjectList
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://sourcedeploy.apigw.ntruss.com/api/v1'
+          method: 'GET'
+          customHeaders: '{"x-ncp-iam-access-key": "F69B46A5BD74794E8737"}'
+          
+      - name: show response from GET projectList
+        run: |
+          echo ${{ fromJson(steps.getProjectList.outputs.response).projectList.id }}
+
