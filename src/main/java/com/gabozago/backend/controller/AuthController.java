@@ -1,5 +1,7 @@
 package com.gabozago.backend.controller;
 
+import com.gabozago.backend.dto.auth.JoinRequestDto;
+import com.gabozago.backend.dto.auth.LoginRequestDto;
 import com.gabozago.backend.entity.User;
 import com.gabozago.backend.error.ErrorCode;
 import com.gabozago.backend.error.ErrorResponse;
@@ -11,8 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collections;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -31,18 +33,18 @@ public class AuthController {
 
     @PostMapping("/join")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> join(@RequestBody Map<String, String> user) {
-        if (userService.checkExistsByEmail(user.get("email"))) {
+    public ResponseEntity<String> join(final @Valid @RequestBody JoinRequestDto user) {
+        if (userService.checkExistsByEmail(user.getEmail())) {
             return ErrorResponse.of(ErrorCode.DUPLICATED_EMAIL).entity();
         }
 
-        if (userService.checkExistsByNickname(user.get("nickname"))) {
+        if (userService.checkExistsByNickname(user.getNickname())) {
             return ErrorResponse.of(ErrorCode.DUPLICATED_NICKNAME).entity();
         }
 
         userService.save(User.builder()
-                .email(user.get("email"))
-                .password(passwordEncoder.encode(user.get("password")))
+                .email(user.getEmail())
+                .password(passwordEncoder.encode(user.getPassword()))
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
 
@@ -50,8 +52,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
+    public ResponseEntity<String> login(final @Valid @RequestBody LoginRequestDto request) {
+        String email = request.getEmail();
         User user;
 
         try {
@@ -60,7 +62,7 @@ public class AuthController {
             return ResponseEntity.notFound().build();
         }
 
-        if (!passwordEncoder.matches(request.get("password"), user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             return new ResponseEntity<>("password is not correct", null, 401);
         }
 
