@@ -94,7 +94,7 @@ jobs:
           echo "TIMESTAMP=$(($(date +%s%N)/1000000))" >> $GITHUB_OUTPUT
          
           METHOD="GET"
-          URI="/photos/puppy.jpg?query1=&query2"
+          URI="https://sourcedeploy.apigw.ntruss.com/api/v1/project"
           
           SIG="$METHOD"' '"$URI"${nl}
           SIG+="${{ steps.extract.outputs.TIMESTAMP }}"${nl}
