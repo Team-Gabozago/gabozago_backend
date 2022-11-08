@@ -90,7 +90,7 @@ jobs:
       # makeSignature 함수 쓰지 않고 TIMESTAMP,SIGNATURE 구하기
       - name: make TIMESTAMP and SIGNATURE
         run: |
-        timestamp=$(echo $(($(date +%s%N)/1000000)))
+        timestamp=($(echo $(($(date +%s%N)/1000000))))
         echo "TIMESTAMP=$timestamp" >> $GITHUB_OUTPUT
         message="GET"' '"https://sourcedeploy.apigw.ntruss.com/api/v1/project"'\\n'"$timestamp"'\\n'${{ secrets.AWS_ACCESS_KEY_ID }}
         signature=$(echo -n -e "$message"|iconv -t utf8 |openssl dgst -sha256 -hmac $SECRETKEY -binary|openssl enc -base64)
