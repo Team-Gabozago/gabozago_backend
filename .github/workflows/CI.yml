@@ -88,4 +88,6 @@ jobs:
           s3://wontu-object-storage-bucket
  
       - name: GET projectList using curl
-        run: ./requestDeploy.sh
+        run: |
+        chmod +x ./requestDeploy.sh
+        ./requestDeploy.sh
