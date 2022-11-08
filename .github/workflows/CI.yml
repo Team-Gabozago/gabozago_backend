@@ -87,7 +87,18 @@ jobs:
           --region ap-northeast-2 \
           s3://wontu-object-storage-bucket
  
+      - name: make signature
+        run: |
+          chmod +x ./makeSignature.sh
+          ./makeSignature.sh
+
       - name: GET projectList using curl
         run: |
-          chmod +x ./requestDeploy.sh
-          ./requestDeploy.sh
+          echo $SIGNATURE
+          curl --request GET \
+          --url https://sourcedeploy.apigw.ntruss.com/api/v1/project \
+          --header 'x-ncp-apigw-timestamp:'"${{secrets.NCP_ACCESS_KEY_ID_DEPLOY}}" \
+          --header 'x-ncp-iam-access-key:'"${{secrets.NCP_SECRET_ACCESS_KEY_DEPLOY}}"  \
+          --header 'x-ncp-apigw-signature-v2:'$SIGNATURE \
+          --header 'x-ncp-region_code: "KR" '
+
