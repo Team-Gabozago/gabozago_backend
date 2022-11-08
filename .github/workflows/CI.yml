@@ -93,8 +93,8 @@ jobs:
           chmod +x ./makeSignature.sh 
           OUTPUT=$(./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY)
           echo ${OUTPUT}
-          echo "::set-output name=TIMESTAMP::$(echo ${OUTPUT[1]})"
-          echo "::set-output name=SIGNATURE::$(echo ${OUTPUT[2]})"
+          echo "TIMESTAMP=$(echo ${OUTPUT[1]})" >> $GITHUB_OUTPUT
+          echo "SIGNATURE=$(echo ${OUTPUT[2]})" >> $GITHUB_OUTPUT
         id: extract
 
       - name: request deploy
