@@ -91,5 +91,5 @@ jobs:
         run: |
           curl --request GET \
           --url https://sourcedeploy.apigw.ntruss.com/api/v1/project \
-          --header 'x-ncp-iam-access-key: ${{secrets.NCP_ACCESS_KEY_ID_DEPLOY}}' \
-          --header 'x-ncp-apigw-signature-v2: ${{secrets.NCP_SECRET_ACCESS_KEY_DEPLOY}}' 
+          --header 'x-ncp-iam-access-key: "${{secrets.NCP_ACCESS_KEY_ID_DEPLOY}}" ' \
+          --header 'x-ncp-apigw-signature-v2: "${{secrets.NCP_SECRET_ACCESS_KEY_DEPLOY}}" ' 
