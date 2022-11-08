@@ -92,7 +92,7 @@ jobs:
         run: |
           chmod +x ./makeSignature.sh 
           OUTPUT=$(./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY)
-          echo $OUTPUT
+          echo ${OUTPUT}
           echo "::set-output name=TIMESTAMP::$(echo ${OUTPUT[1]})"
           echo "::set-output name=SIGNATURE::$(echo ${OUTPUT[2]})"
         id: extract
