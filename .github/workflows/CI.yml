@@ -100,6 +100,6 @@ jobs:
           --url https://sourcedeploy.apigw.ntruss.com/api/v1/project \
           --header 'x-ncp-apigw-timestamp:'"${{secrets.NCP_ACCESS_KEY_ID_DEPLOY}}" \
           --header 'x-ncp-iam-access-key:'"${{secrets.NCP_SECRET_ACCESS_KEY_DEPLOY}}"  \
-          --header 'x-ncp-apigw-signature-v2:'$SIGNATURE \
+          --header 'x-ncp-apigw-signature-v2:'$SIGN \
           --header 'x-ncp-region_code: "KR" '
 
