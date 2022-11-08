@@ -90,7 +90,8 @@ jobs:
       - name: make signature
         run: |
           chmod +x ./makeSignature.sh
-          ./makeSignature.sh
+          SIGNATURE = $(./makeSignature.sh)
+          echo $SIGNATURE
 
       - name: GET projectList using curl
         run: |
