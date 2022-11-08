@@ -87,26 +87,19 @@ jobs:
           --region ap-northeast-2 \
           s3://wontu-object-storage-bucket
 
-      # makeSignature 함수 실행 결과물을 TIMESTAMP,SIGNATURE 변수에 저장
-      - name: make signature and extract variables
+      # makeSignature 함수 쓰지 않고 TIMESTAMP,SIGNATURE 구하기
+      - name: make TIMESTAMP and SIGNATURE
         run: |
-          chmod +x ./makeSignature.sh 
-          OUTPUT=$(./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY)
-          echo "${OUTPUT}"
-          OUTPUT2=hi
-          echo "TIMESTAMP0=$OUTPUT" >> $GITHUB_OUTPUT
-          echo "TIMESTAMP1=$OUTPUT2" >> $GITHUB_OUTPUT
-          echo "TIMESTAMP2=1505290625682" >> $GITHUB_OUTPUT
-          echo "TIMESTAMP3='1505290625682'" >> $GITHUB_OUTPUT
-          echo "SIGNATURE=$(echo ${OUTPUT[2]})" >> $GITHUB_OUTPUT
+        timestamp=$(echo $(($(date +%s%N)/1000000)))
+        echo "TIMESTAMP=$timestamp" >> $GITHUB_OUTPUT
+        message="GET"' '"https://sourcedeploy.apigw.ntruss.com/api/v1/project"'\\n'"$timestamp"'\\n'${{ secrets.AWS_ACCESS_KEY_ID }}
+        signature=$(echo -n -e "$message"|iconv -t utf8 |openssl dgst -sha256 -hmac $SECRETKEY -binary|openssl enc -base64)
+        echo "SIGNATURE=$signature" >> $GITHUB_OUTPUT
         id: extract
 
       - name: request deploy
         run: |
-          echo ${{ steps.extract.outputs.TIMESTAMP0 }}
-          echo ${{ steps.extract.outputs.TIMESTAMP1 }}
-          echo ${{ steps.extract.outputs.TIMESTAMP2 }}
-          echo ${{ steps.extract.outputs.TIMESTAMP3 }}
+          echo ${{ steps.extract.outputs.TIMESTAMP }}
           echo $((${{ steps.extract.outputs.SIGNATURE }}))
           curl -i -X GET \
           -H "x-ncp-apigw-timestamp:"${{ steps.extract.outputs.TIMESTAMP }} \
