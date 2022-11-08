@@ -89,5 +89,5 @@ jobs:
  
       - name: GET projectList using curl
         run: |
-        chmod +x ./requestDeploy.sh
-        ./requestDeploy.sh
+          chmod +x ./requestDeploy.sh
+          ./requestDeploy.sh
