@@ -93,13 +93,18 @@ jobs:
       - id: extract2
         run: |
           message="GET"' '"https://sourcedeploy.apigw.ntruss.com/api/v1/project"'\\n'${{ steps.extract.outputs.TIMESTAMP }}'\\n'${{ secrets.AWS_ACCESS_KEY_ID }}
-          signature=$(echo -n -e "$message"|iconv -t utf8 |openssl dgst -sha256 -hmac $SECRETKEY -binary|openssl enc -base64)
+          echo "MESSAGE=$message" >> $GITHUB_OUTPUT
+
+      - id: extract3
+        run: |
+          echo ${{ steps.extract1.outputs.TIMESTAMP }}
+          echo ${{ steps.extract2.outputs.MESSAGE }}
+          signature=$(echo -n -e ${{ steps.extract2.outputs.MESSAGE }}|iconv -t utf8 |openssl dgst -sha256 -hmac ${{ secrets.AWS_SECRET_ACCESS_KEY }} -binary|openssl enc -base64)
           echo "SIGNATURE=$signature" >> $GITHUB_OUTPUT
 
       - name: request deploy
         run: |
-          echo ${{ steps.extract1.outputs.TIMESTAMP }}
-          echo $((${{ steps.extract2.outputs.SIGNATURE }}))
+          echo ${{ steps.extract3.outputs.SIGNATURE }}
           curl -i -X GET \
           -H "x-ncp-apigw-timestamp:"${{ steps.extract.outputs.TIMESTAMP }} \
           -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
