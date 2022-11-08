@@ -3,7 +3,8 @@ package com.gabozago.backend.controller;
 import com.gabozago.backend.entity.User;
 import com.gabozago.backend.jwt.TokenProvider;
 import com.gabozago.backend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
 
@@ -19,19 +21,13 @@ public class AuthController {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public AuthController(UserService userService, TokenProvider tokenProvider, PasswordEncoder passwordEncoder) {
-        this.userService = userService;
-        this.tokenProvider = tokenProvider;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @GetMapping("/")
     public ResponseEntity<String> index() {
         return ResponseEntity.ok("this is auth controller");
     }
 
     @PostMapping("/join")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> join(@RequestBody Map<String, String> user) {
         userService.save(User.builder()
                 .email(user.get("email"))
