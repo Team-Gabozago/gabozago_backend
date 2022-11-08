@@ -35,6 +35,7 @@ jobs:
       shell: bash
       
     - name: make application.properties
+    - uses: action/checkout@v2
     - run:
         mkdir ./src/main/resources | 
         touch ./src/main/resources/application.yml |
