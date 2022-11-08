@@ -92,7 +92,7 @@ jobs:
 
       - id: extract2
         run: |
-          message="GET https://sourcedeploy.apigw.ntruss.com/api/v1/project\\n${{ steps.extract1.outputs.TIMESTAMP }}\\n${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}"
+          message="GET https://sourcedeploy.apigw.ntruss.com/api/v1/project"$'\n'${{ steps.extract1.outputs.TIMESTAMP }}$'\n'${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}
           echo "MESSAGE=$message" >> $GITHUB_OUTPUT
 
       - id: extract3
