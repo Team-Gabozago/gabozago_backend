@@ -89,6 +89,7 @@ jobs:
  
       - name: make signature
         run: |
+          touch ./deployLogs.out
           chmod +x ./makeSignature.sh 
-          ./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY   
+          ./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY >> ./deployLogs.out
           
