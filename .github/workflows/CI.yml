@@ -91,11 +91,11 @@ jobs:
         run: |
           chmod +x ./makeSignature.sh
           SIGNATURE = $(./makeSignature.sh)
-          echo $SIGNATURE
+          echo ${SIGNATURE}
 
       - name: GET projectList using curl
         run: |
-          echo $SIGNATURE
+          echo ${SIGNATURE}
           curl --request GET \
           --url https://sourcedeploy.apigw.ntruss.com/api/v1/project \
           --header 'x-ncp-apigw-timestamp:'"${{secrets.NCP_ACCESS_KEY_ID_DEPLOY}}" \
