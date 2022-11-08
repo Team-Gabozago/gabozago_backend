@@ -1,5 +1,7 @@
 package com.gabozago.backend.controller;
 
+import com.gabozago.backend.dto.auth.JoinRequestDto;
+import com.gabozago.backend.dto.auth.LoginRequestDto;
 import com.gabozago.backend.entity.User;
 import com.gabozago.backend.error.ErrorCode;
 import com.gabozago.backend.jwt.TokenProvider;
@@ -86,6 +88,57 @@ public class AuthControllerTests {
     }
 
     @Test
+    @DisplayName("회원가입 @Valid 테스트 이메일이 없다면")
+    void testJoinValid_이메일() throws Exception {
+        mockMvc.perform(post("/auth/join")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("*/*")
+                        .content("{\"email\": \"\", \"password\": \"password\", \"nickname\": \"test\"}"))
+                .andExpect(status().isBadRequest()).andExpect(result -> {
+                    String contentAsString = result.getResponse().getContentAsString();
+                    System.out.println(contentAsString);
+
+                    JSONObject jsonObject = new JSONObject(contentAsString);
+                    assert jsonObject.get("code").equals("BAD_REQUEST");
+                    assert jsonObject.get("message").equals(JoinRequestDto.EMAIL_NOT_NULL);
+                });
+    }
+
+    @Test
+    @DisplayName("회원가입 @Valid 테스트 비밀번호가 없다면")
+    void testJoinValid_비밀번호() throws Exception {
+        mockMvc.perform(post("/auth/join")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("*/*")
+                        .content("{\"email\": \"test@example.com\", \"password\": \"\", \"nickname\": \"test\"}"))
+                .andExpect(status().isBadRequest()).andExpect(result -> {
+                    String contentAsString = result.getResponse().getContentAsString();
+                    System.out.println(contentAsString);
+
+                    JSONObject jsonObject = new JSONObject(contentAsString);
+                    assert jsonObject.get("code").equals("BAD_REQUEST");
+                    assert jsonObject.get("message").equals(JoinRequestDto.PASSWORD_NOT_NULL);
+                });
+    }
+
+    @Test
+    @DisplayName("회원가입 @Valid 테스트 닉네임이 없다면")
+    void testJoinValid_닉네임() throws Exception {
+        mockMvc.perform(post("/auth/join")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("*/*")
+                        .content("{\"email\": \"test@example.com\", \"password\": \"password\", \"nickname\": \"\"}"))
+                .andExpect(status().isBadRequest()).andExpect(result -> {
+                    String contentAsString = result.getResponse().getContentAsString();
+                    System.out.println(contentAsString);
+
+                    JSONObject jsonObject = new JSONObject(contentAsString);
+                    assert jsonObject.get("code").equals("BAD_REQUEST");
+                    assert jsonObject.get("message").equals(JoinRequestDto.NICKNAME_NOT_NULL);
+                });
+    }
+
+    @Test
     @DisplayName("Test Login")
     void testLogin() throws Exception {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -107,6 +160,41 @@ public class AuthControllerTests {
                         .content("{\"email\": \"test@example.com\", \"password\": \"password\", \"nickname\": \"test\"}"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    @DisplayName("로그인 @Valid 테스트 이메일이 없다면")
+    void testLoginValid_이메일() throws Exception {
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("*/*")
+                        .content("{\"email\": \"\", \"password\": \"password\", \"nickname\": \"test\"}"))
+                .andExpect(status().isBadRequest()).andExpect(result -> {
+                    String contentAsString = result.getResponse().getContentAsString();
+                    System.out.println(contentAsString);
+
+                    JSONObject jsonObject = new JSONObject(contentAsString);
+                    assert jsonObject.get("code").equals("BAD_REQUEST");
+                    assert jsonObject.get("message").equals(LoginRequestDto.EMAIL_NOT_NULL);
+                });
+    }
+
+    @Test
+    @DisplayName("로그인 @Valid 테스트 비밀번호가 없다면")
+    void testLoginValid_비밀번호() throws Exception {
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("*/*")
+                        .content("{\"email\": \"test@example.com\", \"password\": \"\", \"nickname\": \"test\"}"))
+                .andExpect(status().isBadRequest()).andExpect(result -> {
+                    String contentAsString = result.getResponse().getContentAsString();
+                    System.out.println(contentAsString);
+
+                    JSONObject jsonObject = new JSONObject(contentAsString);
+                    assert jsonObject.get("code").equals("BAD_REQUEST");
+                    assert jsonObject.get("message").equals(LoginRequestDto.PASSWORD_NOT_NULL);
+                });
+    }
+
 
     @Test
     @DisplayName("Test Login with wrong password")
