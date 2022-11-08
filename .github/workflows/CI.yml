@@ -34,16 +34,15 @@ jobs:
       run: chmod +x ./gradlew
       shell: bash
       
-    - name: make application.properties
-    - uses: action/checkout@v2
-    - run:
+    - name: make application.yml
+      run:
         mkdir ./src/main/resources | 
-        touch ./src/main/resources/application.yml |
-        echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml
-    - uses: actions/upload-artifact@v2
-      with:
-        name: application.yml
-        path: ./src/main/resources/application.yml
+        touch ./src/main/resources/application.yml 
+      shell: bash
+      
+    - name: deliver application.yml
+      run: echo "${{secrets.APPLICATION}}" > ./src/main/resources/application.yml
+      shell: bash
     
     - name: Build with Gradle
       run: ./gradlew build
