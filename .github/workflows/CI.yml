@@ -100,5 +100,5 @@ jobs:
             -H "x-ncp-apigw-timestamp:1505290625682" \
             -H "x-ncp-iam-access-key:D78BB444D6D3C84CA38D" \
             -H "x-ncp-apigw-signature-v2:WTPItrmMIfLUk/UyUIyoQbA/z5hq9o3G8eQMolUzTEa=" \
-            -H 'x-ncp-region_code: "KR" '
+            -H 'x-ncp-region_code: "KR" ' \
             'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
