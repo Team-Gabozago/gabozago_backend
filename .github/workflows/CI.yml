@@ -33,6 +33,16 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
       shell: bash
+      
+    - name: make application.properties
+    - run:
+        mkdir ./src/main/resources | 
+        touch ./src/main/resources/application.yml |
+        echo "${{env.APPLICATION}}" > ./src/main/resources/application.yml
+    - uses: actions/upload-artifact@v2
+      with:
+        name: application.yml
+        path: ./src/main/resources/application.yml
     
     - name: Build with Gradle
       run: ./gradlew build
