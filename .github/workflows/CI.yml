@@ -86,10 +86,20 @@ jobs:
           s3 cp ./wontu-webserver.zip \
           --region ap-northeast-2 \
           s3://wontu-object-storage-bucket
- 
-      - name: make signature
+
+      # makeSignature 함수 실행 결과물을 TIMESTAMP,SIGNATURE 변수에 저장
+      - name: make signature and extract variables
         run: |
-          touch ./deployLogs.out
           chmod +x ./makeSignature.sh 
-          ./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY >> ./deployLogs.out
-          
+          OUTPUT=$(./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY)
+          echo "::set-output name=TIMESTAMP::$(echo ${OUTPUT[1]})"
+          echo "::set-output name=SIGNATURE::$(echo ${OUTPUT[2]})"
+        id: extract
+
+      - name: request deploy
+        run: |
+          curl -i -X GET \
+          -H "x-ncp-apigw-timestamp:"${steps.extract.outputs.TIMESTAMP} \
+          -H "x-ncp-iam-access-key:"${NCP_ACCESS_KEY_ID_DEPLOY} \
+          -H "x-ncp-apigw-signature-v2:"${steps.extract.outputs.SIGNATURE} \
+          'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
