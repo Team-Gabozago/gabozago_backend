@@ -7,6 +7,9 @@ import org.apache.tomcat.util.file.ConfigFileLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -16,29 +19,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayName("Token Provider Tests")
 public class TokenProviderTests {
     TokenProvider tokenProvider;
+
+    @Mock
+    UserService userService;
     User user;
 
     @BeforeEach
     public void init() {
         user = User.builder().id(1L).email("test@example.com").username("user").password("password").build();
-        tokenProvider = new TokenProvider(new UserService(null) {
-            @Override
-            public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-                return user;
-            }
-
-            @Override
-            public void save(User user) {
-                // do nothing
-            }
-
-            @Override
-            public User findByEmail(String email) {
-                return user;
-            }
-        });
-
-
+        userService = Mockito.mock(UserService.class);
+        tokenProvider = new TokenProvider(userService);
     }
 
     @Test
@@ -66,9 +56,11 @@ public class TokenProviderTests {
 
     @Test
     void testGetAuthentication() {
-        System.out.println(user.getId());
-        String token = tokenProvider.createToken(user.getId(), null);
-        tokenProvider.getAuthentication(token);
+        Mockito.when(userService.loadUserByUsername(user.getId().toString())).thenReturn(user);
+
+        String token = tokenProvider.createToken(1L, null);
+        Authentication authentication = tokenProvider.getAuthentication(token);
+        assertEquals("user", authentication.getName());
     }
 
     @Test
