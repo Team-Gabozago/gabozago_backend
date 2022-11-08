@@ -90,14 +90,5 @@ jobs:
       - name: make signature
         run: |
           chmod +x ./makeSignature.sh 
-          SIGN=$(./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY)
-          echo ${SIGN}
-
-      - name: GET projectList using curl
-        run: |
-          echo ${SIGN}
-          curl -i -X GET \
-            -H "x-ncp-apigw-timestamp:"'$(echo $(($(date +%s%N)/1000000)))' \
-            -H "x-ncp-iam-access-key:"'${{secrets.NCP_ACCESS_KEY_ID_DEPLOY}}' \
-            -H "x-ncp-apigw-signature-v2:"${SIGN} \
-            'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
+          ./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY   
+          

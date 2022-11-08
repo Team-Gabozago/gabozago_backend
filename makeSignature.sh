@@ -15,5 +15,10 @@ function makeSignature() {
 	SIG+="$ACCESSKEY"
 
 	SIGNATURE=$(echo -n -e "$SIG"|iconv -t utf8 |openssl dgst -sha256 -hmac $SECRETKEY -binary|openssl enc -base64)
-  echo ${SIGNATURE}
+
+  curl -i -X GET \
+    -H "x-ncp-apigw-timestamp:"${TIMESTAMP} \
+    -H "x-ncp-iam-access-key:"${ACCESSKEY} \
+    -H "x-ncp-apigw-signature-v2:"${SIGNATURE} \
+    'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
 }
