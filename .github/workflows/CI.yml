@@ -20,40 +20,56 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-    
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        java-version: '11'
-        distribution: 'temurin'
-        
-    - name: Grant execute permission for gradlew
-      run: chmod +x ./gradlew
-      shell: bash
-        
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-      with:
-        arguments: build
-        
-    - name: Make zip file
-      run: zip -r wontu-webserver *
-      
-    - name: Move zip file to deploy folder
-      run: |
-        mkdir -p deploy
-        mv wontu-webserver.zip deploy/wontu-webserver.zip
-      
-    - name: upload build file to NCP Object Storage
-      env:
-        NCP_ACCESS_KEY_ID: ${{ secrets.NCP_ACCESS_KEY_ID }}
-        NCP_SECRET_KEY: ${{ secrets.NCP_SECRET_KEY }}
-      run: |
-        aws --endpoint-url-https://kr.object.ncloudstorage.com
-        s3 cp --recursive deploy
-        s3://wontu-object-storage-bucket
-        
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+        shell: bash
+
+      - name: make application.yml
+        run:
+          mkdir ./src/main/resources |
+          touch ./src/main/resources/application.yml
+        shell: bash
+
+      - name: deliver application.yml
+        run: echo "${{secrets.APPLICATION}}" > ./src/main/resources/application.yml
+        shell: bash
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      # Object Storage에 업로드할 파일만 모을 server 디렉터리 생성
+      - name: make server directory
+        run:  mkdir -p server
+
+      # 1. Jar 파일 복사
+      - name: Copy Jar
+        run: cp ./build/libs/*.jar ./server
+
+      # 3. script files 복사
+      - name: Copy script
+        run: cp ./scripts/*.sh ./server
+
+      # 파일 압축
+      - name: Make zip file and move to server directory
+        run: zip -r ./wontu-webserver.zip ./server
+
+      # S3에 업로드
+      - name: upload build file to NCP Object Storage
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: |
+          aws --endpoint-url=https://kr.object.ncloudstorage.com \
+          s3 cp ./wontu-webserver.zip \
+          --region ap-northeast-2 \
+          s3://wontu-object-storage-bucket
