@@ -93,7 +93,7 @@ jobs:
           chmod +x ./makeSignature.sh 
           OUTPUT=$(./makeSignature.sh secrets.NCP_ACCESS_KEY_ID_DEPLOY secrets.NCP_SECRET_ACCESS_KEY_DEPLOY)
           echo "${OUTPUT}"
-          echo "TIMESTAMP=$(echo ${OUTPUT})" >> $GITHUB_OUTPUT
+          echo "TIMESTAMP1=$(echo ${OUTPUT})" >> $GITHUB_OUTPUT
           echo "TIMESTAMP2=1505290625682" >> $GITHUB_OUTPUT
           echo "TIMESTAMP3='1505290625682'" >> $GITHUB_OUTPUT
           echo "SIGNATURE=$(echo ${OUTPUT[2]})" >> $GITHUB_OUTPUT
