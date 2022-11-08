@@ -98,6 +98,8 @@ jobs:
 
       - name: request deploy
         run: |
+          echo $((${{ steps.extract.outputs.TIMESTAMP }}))
+          echo $((${{ steps.extract.outputs.SIGNATURE }}))
           curl -i -X GET \
           -H "x-ncp-apigw-timestamp:"${{ steps.extract.outputs.TIMESTAMP }} \
           -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
