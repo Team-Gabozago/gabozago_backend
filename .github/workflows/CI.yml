@@ -117,7 +117,7 @@ jobs:
           nl=$'\\n'
           
           ACCESSKEY="${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}"		
-	        SECRETKEY="${{ secrets.NCP_SECRET_ACCESS_KEY_DEPLOY }}"	
+	  SECRETKEY="${{ secrets.NCP_SECRET_ACCESS_KEY_DEPLOY }}"	
 
           METHOD="GET"
           URI="https://sourcedeploy.apigw.ntruss.com/api/v1/project"
