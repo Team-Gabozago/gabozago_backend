@@ -145,19 +145,27 @@ jobs:
           echo ${{ steps.extract_signature2.outputs.SIGNATURE2 }}
           echo ${{ steps.extract_signature_hardCoding.outputs.SIGNATURE_h }}
           echo
-          echo "hi"
+          echo "SIGNATURE"
           curl -i -X GET \
-          -H "x-ncp-apigw-timestamp:"${{ steps.extract_timestamp.outputs.TIMESTAMP }} \
-          -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
-          -H "x-ncp-apigw-signature-v2:"${{ steps.extract_signature.outputs.SIGNATURE}} \
+          -H "x-ncp-apigw-timestamp:${{ steps.extract_timestamp.outputs.TIMESTAMP }}" \
+          -H "x-ncp-iam-access-key:${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}" \
+          -H "x-ncp-apigw-signature-v2:${{ steps.extract_signature.outputs.SIGNATURE}}" \
           'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
+          echo "SIGNATURE2"
           curl -i -X GET \
-          -H "x-ncp-apigw-timestamp:"${{ steps.extract_timestamp.outputs.TIMESTAMP }} \
-          -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
-          -H "x-ncp-apigw-signature-v2:"${{ steps.extract_signature2.outputs.SIGNATURE2}} \
+          -H "x-ncp-apigw-timestamp:${{ steps.extract_timestamp.outputs.TIMESTAMP }}" \
+          -H "x-ncp-iam-access-key:${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}" \
+          -H "x-ncp-apigw-signature-v2:${{ steps.extract_signature2.outputs.SIGNATURE2}}" \
           'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
+          echo "SIGNATURE_h"
           curl -i -X GET \
-          -H "x-ncp-apigw-timestamp:"${{ steps.extract_timestamp.outputs.TIMESTAMP }} \
-          -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
-          -H "x-ncp-apigw-signature-v2:"${{ steps.extract_signature_hardCoding.outputs.SIGNATURE_h}} \
+          -H "x-ncp-apigw-timestamp:${{ steps.extract_timestamp.outputs.TIMESTAMP }}" \
+          -H "x-ncp-iam-access-key:${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}" \
+          -H "x-ncp-apigw-signature-v2:${{ steps.extract_signature_hardCoding.outputs.SIGNATURE_h}}" \
+          'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
+          echo "SIGNATURE_example"
+          curl -i -X GET \
+          -H "x-ncp-apigw-timestamp:1505290625682" \
+          -H "x-ncp-iam-access-key:D78BB444D6D3C84CA38D" \
+          -H "x-ncp-apigw-signature-v2:WTPItrmMIfLUk/UyUIyoQbA/z5hq9o3G8eQMolUzTEa=" \
           'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
