@@ -136,14 +136,14 @@ jobs:
           SIG+="$TIMESTAMP"${nl}
           SIG+="$ACCESSKEY"
 
-          SIGNATURE=$(echo -n -e "$SIG"|iconv -t utf8 |openssl dgst -sha256 -hmac $SECRETKEY -binary|openssl enc -base64)
+          signature=$(echo -n -e "$SIG"|iconv -t utf8 |openssl dgst -sha256 -hmac $SECRETKEY -binary|openssl enc -base64)
           echo "SIGNATURE_h=$signature" >> $GITHUB_OUTPUT
           
       - name: request deploy
         run: |
           echo ${{ steps.extract_signature.outputs.SIGNATURE }}
-          echo ${{ steps.extract_signature2.outputs.SIGNATURE }}
-          echo ${{ steps.extract_signature_hardCoding.outputs.SIGNATURE }}
+          echo ${{ steps.extract_signature2.outputs.SIGNATURE2 }}
+          echo ${{ steps.extract_signature_hardCoding.outputs.SIGNATURE_h }}
           echo
           echo "hi"
           curl -i -X GET \
