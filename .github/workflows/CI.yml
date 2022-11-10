@@ -90,7 +90,6 @@ jobs:
       - name: make timestamp
         id: extract_timestamp
         run: |
-          nl=$'\\n'
           echo "TIMESTAMP=$(($(date +%s%N)/1000000))" >> $GITHUB_OUTPUT
           
       - name: make MESSAGE
@@ -100,6 +99,7 @@ jobs:
           METHOD="GET"
           URI="https://sourcedeploy.apigw.ntruss.com/api/v1/project"
           
+          nl=$'\\n'
           message="$METHOD"' '"$URI"${nl}
           message+=${{ steps.extract_timestamp.outputs.TIMESTAMP }}${nl}
           message+=${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}
@@ -126,5 +126,5 @@ jobs:
           curl -i -X GET \
           -H "x-ncp-apigw-timestamp:"${{ steps.extract.outputs.TIMESTAMP }} \
           -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
-          -H "x-ncp-apigw-signature-v2:"${{ steps.extract.outputs.SIGNATURE}} \
+          -H "x-ncp-apigw-signature-v2:"${{ steps.extract_signature.outputs.SIGNATURE}} \
           'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
