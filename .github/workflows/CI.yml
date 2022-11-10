@@ -119,13 +119,42 @@ jobs:
           echo -e "message="$message
           signature=$(echo -n -e "$message"|iconv -t utf8 |openssl dgst -sha256 -hmac ${{ secrets.NCP_SECRET_ACCESS_KEY_DEPLOY }} -binary|openssl enc -base64)
           echo "SIGNATURE=$signature" >> $GITHUB_OUTPUT
+          
+      - name: make signature (hard coding)
+        id: extract_signature_hardCoding
+        run: |
+          nl=$'\\n'
+
+          TIMESTAMP=$(echo $(($(date +%s%N)/1000000)))
+          ACCESSKEY="F69B46A5BD74794E8737"				# access key id (from portal or Sub Account)
+          SECRETKEY="EFF9C27D067B780DF3E9C5707695DF66A46681EF"				# secret key (from portal or Sub Account)
+
+          METHOD="GET"
+          URI="https://sourcedeploy.apigw.ntruss.com/api/v1/project"
+
+          SIG="$METHOD"' '"$URI"${nl}
+          SIG+="$TIMESTAMP"${nl}
+          SIG+="$ACCESSKEY"
+
+          SIGNATURE=$(echo -n -e "$SIG"|iconv -t utf8 |openssl dgst -sha256 -hmac $SECRETKEY -binary|openssl enc -base64)
 
       - name: request deploy
         run: |
           echo ${{ steps.extract_signature.outputs.SIGNATURE }}
           echo ${{ steps.extract_signature2.outputs.SIGNATURE }}
+          echo ${{ steps.extract_signature_hardCoding.outputs.SIGNATURE }}
           curl -i -X GET \
           -H "x-ncp-apigw-timestamp:"${{ steps.extract_timestamp.outputs.TIMESTAMP }} \
           -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
           -H "x-ncp-apigw-signature-v2:"${{ steps.extract_signature.outputs.SIGNATURE}} \
+          'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
+          curl -i -X GET \
+          -H "x-ncp-apigw-timestamp:"${{ steps.extract_timestamp.outputs.TIMESTAMP }} \
+          -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
+          -H "x-ncp-apigw-signature-v2:"${{ steps.extract_signature2.outputs.SIGNATURE}} \
+          'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
+          curl -i -X GET \
+          -H "x-ncp-apigw-timestamp:"${{ steps.extract_timestamp.outputs.TIMESTAMP }} \
+          -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
+          -H "x-ncp-apigw-signature-v2:"${{ steps.extract_signature_hardCoding.outputs.SIGNATURE}} \
           'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
