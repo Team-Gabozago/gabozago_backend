@@ -97,10 +97,12 @@ jobs:
           URI="https://sourcedeploy.apigw.ntruss.com/api/v1/project"
           echo "TIMESTAMP="${{ steps.extract.outputs.TIMESTAMP }}
           
-          SIG="$METHOD"' '"$URI"${nl}
-          SIG+=${{ steps.extract.outputs.TIMESTAMP }}${nl}
-          SIG+=${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}
-          echo "SIG="${{ steps.extract.outputs.SIG }}
+          sig="$METHOD"' '"$URI"${nl}
+          sig+=${{ steps.extract.outputs.TIMESTAMP }}${nl}
+          sig+=${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}
+	  echo "SIG=$sig" >> $GITHUB_OUTPUT
+
+	  echo "SIG="${{ steps.extract.outputs.SIG }}"
           signature=$(echo -n -e "$SIG"|iconv -t utf8 |openssl dgst -sha256 -hmac ${{ secrets.NCP_SECRET_ACCESS_KEY_DEPLOY }} -binary|openssl enc -base64)
           echo "SIGNATURE=$signature" >> $GITHUB_OUTPUT
 
@@ -110,27 +112,6 @@ jobs:
           message="GET https://sourcedeploy.apigw.ntruss.com/api/v1/project"$'\n'${{ steps.extract.outputs.TIMESTAMP }}$'\n'${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}
           signature=$(echo -n -e "$message"|iconv -t utf8 |openssl dgst -sha256 -hmac ${{ secrets.NCP_SECRET_ACCESS_KEY_DEPLOY }} -binary|openssl enc -base64)
           echo "SIGNATURE=$signature" >> $GITHUB_OUTPUT
-	  
-      - name: make signature ver3
-        id: extract3
-        run: |
-          nl=$'\\n'
-         
-          METHOD="GET"
-          URI="https://sourcedeploy.apigw.ntruss.com/api/v1/project"
-          echo "TIMESTAMP="${{ steps.extract.outputs.TIMESTAMP }}
-          ACCESSKEY="${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}"			
-	  SECRETKEY="${{ secrets.NCP_SECRET_ACCESS_KEY_DEPLOY }}"
-
-          SIG="$METHOD"' '"$URI"${nl}
-	  SIG+="$TIMESTAMP"${nl}
-	  SIG+="$ACCESSKEY"
-	  
-          echo "SIG="${{ steps.extract.outputs.SIG }}
-          signature=$(echo -n -e "$SIG"|iconv -t utf8 |openssl dgst -sha256 -hmac $SECRETKEY -binary|openssl enc -base64)
-          echo "SIGNATURE=$signature" >> $GITHUB_OUTPUT
-          
-      
 
       - name: request deploy
         run: |
