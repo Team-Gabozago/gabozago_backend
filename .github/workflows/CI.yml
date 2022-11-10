@@ -124,7 +124,7 @@ jobs:
           echo ${{ steps.extract_signature.outputs.SIGNATURE }}
           echo ${{ steps.extract_signature2.outputs.SIGNATURE }}
           curl -i -X GET \
-          -H "x-ncp-apigw-timestamp:"${{ steps.extract.outputs.TIMESTAMP }} \
+          -H "x-ncp-apigw-timestamp:"${{ steps.extract_timestamp.outputs.TIMESTAMP }} \
           -H "x-ncp-iam-access-key:"${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }} \
           -H "x-ncp-apigw-signature-v2:"${{ steps.extract_signature.outputs.SIGNATURE}} \
           'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
