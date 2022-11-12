@@ -2,9 +2,11 @@ package com.gabozago.backend.controller;
 
 import com.gabozago.backend.dto.auth.JoinRequestDto;
 import com.gabozago.backend.dto.auth.LoginRequestDto;
+import com.gabozago.backend.entity.RefreshToken;
 import com.gabozago.backend.entity.User;
 import com.gabozago.backend.error.ErrorCode;
 import com.gabozago.backend.jwt.TokenProvider;
+import com.gabozago.backend.service.RefreshTokenService;
 import com.gabozago.backend.service.UserService;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +21,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.servlet.http.Cookie;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc(addFilters = false)
@@ -30,6 +35,9 @@ public class AuthControllerTests {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private RefreshTokenService refreshTokenService;
 
     @MockBean
     private TokenProvider tokenProvider;
@@ -139,26 +147,45 @@ public class AuthControllerTests {
     }
 
     @Test
-    @DisplayName("Test Login")
+    @DisplayName("로그인 성공")
     void testLogin() throws Exception {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encoded = encoder.encode("password");
 
+        User user = User.builder()
+                .id(1L)
+                .email("test@example.com")
+                .password(encoded)
+                .build();
+
         Mockito.when(userService.findByEmail("test@example.com"))
-                .thenReturn(User.builder()
-                        .id(1L)
-                        .email("test@example.com")
-                        .password(encoded)
-                        .build());
+                .thenReturn(user);
 
         Mockito.when(passwordEncoder.matches("password", encoded))
                 .thenReturn(true);
+
+        Mockito.when(tokenProvider.createAccessToken(user.getId(), user.getRoles()))
+                .thenReturn("accessToken");
+
+        Mockito.when(tokenProvider.createRefreshTokenEntity(user))
+                .thenReturn(RefreshToken
+                        .builder()
+                        .token("refreshToken")
+                        .build());
 
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept("*/*")
                         .content("{\"email\": \"test@example.com\", \"password\": \"password\", \"nickname\": \"test\"}"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andExpect(result -> {
+                    String contentAsString = result.getResponse().getContentAsString();
+                    System.out.println(contentAsString);
+
+                    header().string("Authorization", "Bearer accessToken").match(result);
+
+                    System.out.println("AccessToken: " + result.getResponse().getHeaders("Set-Cookie").get(0));
+                    System.out.println("RefreshToken: " + result.getResponse().getHeaders("Set-Cookie").get(1));
+                });
     }
 
     @Test
@@ -197,7 +224,7 @@ public class AuthControllerTests {
 
 
     @Test
-    @DisplayName("Test Login with wrong password")
+    @DisplayName("로그인 패스워드 틀리면")
     void testLoginWithWrongPassword() throws Exception {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encoded = encoder.encode("passworld");
@@ -216,6 +243,41 @@ public class AuthControllerTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept("*/*")
                         .content("{\"email\": \"test@example.com\", \"password\": \"password\", \"nickname\": \"test\"}"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("토큰 갱신")
+    void testRefreshToken() throws Exception {
+        User user = User.builder()
+                .id(1L)
+                .email("test@example.com")
+                .build();
+
+        RefreshToken refreshToken = tokenProvider.createRefreshTokenEntity(user);
+
+        Mockito.when(tokenProvider.refreshAccessToken(refreshToken))
+                .thenReturn("accessToken");
+
+        mockMvc.perform(post("/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("*/*")
+                        .cookie(new Cookie("refreshToken", "refreshToken")))
+                .andExpect(status().isOk()).andExpect(result -> {
+                    header().string("Authorization", "Bearer accessToken").match(result);
+                });
+    }
+
+    @Test
+    @DisplayName("토큰 갱신 실패 - 토큰이 유효하지 않은 경우")
+    void testRefreshTokenFail() throws Exception {
+        Mockito.when(refreshTokenService.findByToken("refreshToken"))
+                .thenThrow(new IllegalArgumentException());
+
+        mockMvc.perform(post("/auth/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("*/*")
+                        .cookie(new Cookie("refreshToken", "refreshToken")))
                 .andExpect(status().isUnauthorized());
     }
 }
