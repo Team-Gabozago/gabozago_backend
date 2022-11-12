@@ -1,6 +1,5 @@
 package com.gabozago.backend.error;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseEntity;
 
@@ -13,7 +12,7 @@ public class ErrorResponse {
 
     public ErrorResponse(ErrorCode code) {
         this.message = code.getMessage();
-        this.status = code.getStatus();
+        this.status = code.getStatus().value();
         this.code = code.getCode();
     }
 

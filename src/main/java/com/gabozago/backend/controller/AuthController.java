@@ -2,14 +2,16 @@ package com.gabozago.backend.controller;
 
 import com.gabozago.backend.dto.auth.JoinRequestDto;
 import com.gabozago.backend.dto.auth.LoginRequestDto;
+import com.gabozago.backend.entity.RefreshToken;
 import com.gabozago.backend.entity.User;
 import com.gabozago.backend.error.ErrorCode;
 import com.gabozago.backend.error.ErrorResponse;
+import com.gabozago.backend.http.header.AuthHttpHeaders;
 import com.gabozago.backend.jwt.TokenProvider;
+import com.gabozago.backend.service.RefreshTokenService;
 import com.gabozago.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
+    private final RefreshTokenService refreshTokenService;
 
     private final TokenProvider tokenProvider;
 
@@ -45,6 +48,7 @@ public class AuthController {
         userService.save(User.builder()
                 .email(user.getEmail())
                 .password(passwordEncoder.encode(user.getPassword()))
+                .nickname(user.getNickname())
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
 
@@ -59,12 +63,25 @@ public class AuthController {
         try {
             user = userService.findByEmail(email);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return ErrorResponse.of(ErrorCode.USER_NOT_FOUND).entity();
         }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return new ResponseEntity<>("password is not correct", null, 401);
+            return ErrorResponse.of(ErrorCode.PASSWORD_WRONG).entity();
         }
+
+        String accessToken = tokenProvider.createAccessToken(user.getId(), user.getRoles());
+        RefreshToken refreshToken = tokenProvider.createRefreshTokenEntity(user);
+
+        refreshTokenService.save(refreshToken);
+
+        AuthHttpHeaders headers = new AuthHttpHeaders();
+
+        headers.setAccessToken(accessToken);
+        headers.setRefreshToken(refreshToken.getToken());
+
+        return new ResponseEntity<>("login success", headers, HttpStatus.OK);
+    }
 
         String jwtToken = tokenProvider.createToken(user.getId(), user.getRoles());
 
