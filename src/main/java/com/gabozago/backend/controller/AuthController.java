@@ -83,9 +83,23 @@ public class AuthController {
         return new ResponseEntity<>("login success", headers, HttpStatus.OK);
     }
 
-        String jwtToken = tokenProvider.createToken(user.getId(), user.getRoles());
+    @PostMapping("/refresh")
+    public ResponseEntity<String> refresh(@CookieValue("refreshToken") String refreshToken) {
+        RefreshToken token;
 
-        return ResponseEntity.ok(jwtToken);
+        try {
+            token = refreshTokenService.findByToken(refreshToken);
+        } catch (Exception e) {
+            return ErrorResponse.of(ErrorCode.INVALID_REFRESH_TOKEN).entity();
+        }
+
+        String accessToken = tokenProvider.refreshAccessToken(token);
+
+        AuthHttpHeaders headers = new AuthHttpHeaders();
+
+        headers.setAccessToken(accessToken);
+
+        return new ResponseEntity<>("refresh success", headers, HttpStatus.OK);
     }
 
     @GetMapping("/needAuth")
