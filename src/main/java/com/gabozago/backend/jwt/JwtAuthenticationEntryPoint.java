@@ -21,6 +21,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private void setResponse(HttpServletResponse response) throws IOException {
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        response.getWriter().println(ErrorResponse.of(ErrorCode.UNAUTHENTICATED).string());
+        response.getWriter().println(new ErrorResponse(ErrorCode.UNAUTHENTICATED).parseJson());
     }
 }
