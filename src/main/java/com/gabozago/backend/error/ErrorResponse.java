@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
+@Getter
 public class ErrorResponse {
 
     private String message;
@@ -14,16 +15,7 @@ public class ErrorResponse {
         this.code = code.getCode();
     }
 
-    public static ErrorResponse of(ErrorCode code) {
-        return new ErrorResponse(code);
-    }
-
-    public ResponseEntity<String> entity() {
-        return ResponseEntity.status(this.status)
-                .body("{ \"message\" : \"" + this.message + "\", \"code\" : \"" + this.code + "\"}");
-    }
-
-    public String string() {
+    public String parseJson() {
         return "{ \"message\" : \"" + this.message + "\", \"code\" : \"" + this.code + "\"}";
     }
 }

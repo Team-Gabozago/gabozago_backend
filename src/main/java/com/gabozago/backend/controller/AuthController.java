@@ -38,11 +38,11 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> join(final @Valid @RequestBody JoinRequestDto user) {
         if (userService.checkExistsByEmail(user.getEmail())) {
-            return ErrorResponse.of(ErrorCode.DUPLICATED_EMAIL).entity();
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.DUPLICATED_EMAIL).parseJson(), HttpStatus.CONFLICT);
         }
 
         if (userService.checkExistsByNickname(user.getNickname())) {
-            return ErrorResponse.of(ErrorCode.DUPLICATED_NICKNAME).entity();
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.DUPLICATED_NICKNAME).parseJson(), HttpStatus.CONFLICT);
         }
 
         userService.save(User.builder()
@@ -63,11 +63,11 @@ public class AuthController {
         try {
             user = userService.findByEmail(email);
         } catch (Exception e) {
-            return ErrorResponse.of(ErrorCode.USER_NOT_FOUND).entity();
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.USER_NOT_FOUND).parseJson(), HttpStatus.NOT_FOUND);
         }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return ErrorResponse.of(ErrorCode.PASSWORD_WRONG).entity();
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.PASSWORD_WRONG).parseJson(), HttpStatus.UNAUTHORIZED);
         }
 
         String accessToken = tokenProvider.createAccessToken(user.getId(), user.getRoles());
@@ -90,7 +90,7 @@ public class AuthController {
         try {
             token = refreshTokenService.findByToken(refreshToken);
         } catch (Exception e) {
-            return ErrorResponse.of(ErrorCode.INVALID_REFRESH_TOKEN).entity();
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.INVALID_REFRESH_TOKEN).parseJson(), HttpStatus.UNAUTHORIZED);
         }
 
         String accessToken = tokenProvider.refreshAccessToken(token);
