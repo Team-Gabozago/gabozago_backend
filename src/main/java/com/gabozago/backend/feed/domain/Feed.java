@@ -1,17 +1,17 @@
 package com.gabozago.backend.feed.domain;
 
 import com.gabozago.backend.AbstractEntity;
-import com.gabozago.backend.user.entity.User;
+import com.gabozago.backend.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+
 import java.util.*;
 
-@Slf4j
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,19 +22,23 @@ public class Feed extends AbstractEntity {
     @Column(name = "feed_id")
     private Long id;
 
+    @Column(nullable = false)
+    @NotBlank
     private String title;
 
+    @Column(nullable = false, columnDefinition = "TEXT")
+    @NotBlank
     private String content;
 
     @Embedded
-    private Address address;
+    private Location location;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="category_id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToMany(mappedBy = "feed")
@@ -50,29 +54,26 @@ public class Feed extends AbstractEntity {
 
     @Builder
     public Feed(Long id, User author, Category category,
-                String title, String content, Address address, int views) {
+            String title, String content, Location location, int views) {
         this.id = id;
         this.author = author;
         this.category = category;
         this.title = title;
         this.content = content;
-        this.address = address;
+        this.location = location;
         this.views = views;
         this.images = new ArrayList<>();
         this.likes = new ArrayList<>();
         this.comments = new ArrayList<>();
     }
 
-    // 조회수
-//    public void increaseView (boolean alreadyView) {
-//        if (alreadyView) {
-//            return;
-//        }
-//        this.views++;
-//    }
 
-    public void changeCategory(Category category) {
+    public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     public Feed writtenBy(User author) {
@@ -125,5 +126,25 @@ public class Feed extends AbstractEntity {
             }
         }
         return commentAndReplies;
+    }
+
+    public void increaseView(boolean alreadyView) {
+        if (alreadyView) {
+            return;
+        }
+        this.views++;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Feed feed = (Feed) o;
+        return Objects.equals(id, feed.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

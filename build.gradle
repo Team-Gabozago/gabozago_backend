@@ -28,8 +28,6 @@ dependencies {
     implementation 'junit:junit:4.13.1'
 
 
-	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
