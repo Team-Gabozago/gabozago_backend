@@ -2,14 +2,16 @@ package com.gabozago.backend.controller;
 
 import com.gabozago.backend.dto.auth.JoinRequestDto;
 import com.gabozago.backend.dto.auth.LoginRequestDto;
+import com.gabozago.backend.entity.RefreshToken;
 import com.gabozago.backend.entity.User;
 import com.gabozago.backend.error.ErrorCode;
 import com.gabozago.backend.error.ErrorResponse;
+import com.gabozago.backend.http.header.AuthHttpHeaders;
 import com.gabozago.backend.jwt.TokenProvider;
+import com.gabozago.backend.service.RefreshTokenService;
 import com.gabozago.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
+    private final RefreshTokenService refreshTokenService;
 
     private final TokenProvider tokenProvider;
 
@@ -35,16 +38,17 @@ public class AuthController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> join(final @Valid @RequestBody JoinRequestDto user) {
         if (userService.checkExistsByEmail(user.getEmail())) {
-            return ErrorResponse.of(ErrorCode.DUPLICATED_EMAIL).entity();
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.DUPLICATED_EMAIL).parseJson(), HttpStatus.CONFLICT);
         }
 
         if (userService.checkExistsByNickname(user.getNickname())) {
-            return ErrorResponse.of(ErrorCode.DUPLICATED_NICKNAME).entity();
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.DUPLICATED_NICKNAME).parseJson(), HttpStatus.CONFLICT);
         }
 
         userService.save(User.builder()
                 .email(user.getEmail())
                 .password(passwordEncoder.encode(user.getPassword()))
+                .nickname(user.getNickname())
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
 
@@ -59,16 +63,43 @@ public class AuthController {
         try {
             user = userService.findByEmail(email);
         } catch (Exception e) {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.USER_NOT_FOUND).parseJson(), HttpStatus.NOT_FOUND);
         }
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return new ResponseEntity<>("password is not correct", null, 401);
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.PASSWORD_WRONG).parseJson(), HttpStatus.UNAUTHORIZED);
         }
 
-        String jwtToken = tokenProvider.createToken(user.getId(), user.getRoles());
+        String accessToken = tokenProvider.createAccessToken(user.getId(), user.getRoles());
+        RefreshToken refreshToken = tokenProvider.createRefreshTokenEntity(user);
 
-        return ResponseEntity.ok(jwtToken);
+        refreshTokenService.save(refreshToken);
+
+        AuthHttpHeaders headers = new AuthHttpHeaders();
+
+        headers.setAccessToken(accessToken);
+        headers.setRefreshToken(refreshToken.getToken());
+
+        return new ResponseEntity<>("login success", headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<String> refresh(@CookieValue("refreshToken") String refreshToken) {
+        RefreshToken token;
+
+        try {
+            token = refreshTokenService.findByToken(refreshToken);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.INVALID_REFRESH_TOKEN).parseJson(), HttpStatus.UNAUTHORIZED);
+        }
+
+        String accessToken = tokenProvider.refreshAccessToken(token);
+
+        AuthHttpHeaders headers = new AuthHttpHeaders();
+
+        headers.setAccessToken(accessToken);
+
+        return new ResponseEntity<>("refresh success", headers, HttpStatus.OK);
     }
 
     @GetMapping("/needAuth")

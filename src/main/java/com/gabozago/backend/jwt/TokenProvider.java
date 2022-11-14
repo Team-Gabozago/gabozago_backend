@@ -1,5 +1,7 @@
 package com.gabozago.backend.jwt;
 
+import com.gabozago.backend.entity.RefreshToken;
+import com.gabozago.backend.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -32,17 +35,52 @@ public class TokenProvider {
         this.secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(Long userID, List<String> roles) {
+    public String createAccessToken(Long userID, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(userID.toString());
         claims.put("roles", roles);
 
-        long expiration = 1000 * 60 * 60 * 24 * 7;
+        long expiration = 1000 * 60 * 60 * 2; // 2 hours
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
+    }
+
+    public String createRefreshToken(Long userID) {
+        Claims claims = Jwts.claims().setSubject(userID.toString());
+
+        long expiration = 1000L * 60 * 60 * 24 * 30; // 30 days
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+    public RefreshToken createRefreshTokenEntity(User user) {
+        String token = createRefreshToken(user.getId());
+
+        return RefreshToken
+                .builder()
+                .token(token)
+                .user(user)
+                .expiredAt(getExpirationDateFromToken(token))
+                .isValid(true)
+                .build();
+    }
+
+    public Timestamp getExpirationDateFromToken(String token) {
+        return new Timestamp(Jwts
+                .parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getExpiration()
+                .getTime()
+        );
     }
 
     public Boolean validateToken(String token) {
@@ -83,5 +121,15 @@ public class TokenProvider {
 
     private String getUserIdFromToken(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public String refreshAccessToken(RefreshToken refreshToken) {
+        String accessToken = null;
+
+        if (refreshToken.getExpiredAt().after(new Timestamp(System.currentTimeMillis()))) {
+            accessToken = createAccessToken(refreshToken.getUser().getId(), refreshToken.getUser().getRoles());
+        }
+
+        return accessToken;
     }
 }
