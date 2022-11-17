@@ -127,8 +127,8 @@ jobs:
       
           TIMESTAMP=${{ steps.extract_timestamp.outputs.TIMESTAMP }}
           echo "TIMESTAMP="${{ steps.extract_timestamp.outputs.TIMESTAMP }}
-          ACCESSKEY="F69B46A5BD74794E8737"				# access key id (from portal or Sub Account)
-          SECRETKEY="EFF9C27D067B780DF3E9C5707695DF66A46681EF"				# secret key (from portal or Sub Account)
+          ACCESSKEY="A401F1FB117891E8BD14"				# access key id (from portal or Sub Account)
+          SECRETKEY="D68F83480BB50A42B678B74EBEBAE7E72029135C"				# secret key (from portal or Sub Account)
       
           METHOD="GET"
           URI="https://sourcedeploy.apigw.ntruss.com/api/v1/project"
