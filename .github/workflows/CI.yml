@@ -165,7 +165,7 @@ jobs:
           'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
           echo "SIGNATURE_example"
           curl -i -X GET \
-          -H "x-ncp-apigw-timestamp:1668685749880" \
+          -H "x-ncp-apigw-timestamp:1668686245565" \
           -H "x-ncp-iam-access-key:D78BB444D6D3C84CA38D" \
           -H "x-ncp-apigw-signature-v2:WTPItrmMIfLUk/UyUIyoQbA/z5hq9o3G8eQMolUzTEa=" \
           'https://sourcedeploy.apigw.ntruss.com/api/v1/project'
