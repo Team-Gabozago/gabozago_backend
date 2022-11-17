@@ -115,7 +115,7 @@ jobs:
       - name: make signature ver2
         id: extract_signature2
         run: |
-          message="GET https://sourcedeploy.apigw.ntruss.com/api/v1/project"$'\n'${{ steps.extract_timestamp.outputs.TIMESTAMP }}$'\n'${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}
+          message="GET /api/v1/project"$'\n'${{ steps.extract_timestamp.outputs.TIMESTAMP }}$'\n'${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}
           echo -n -e "message="$message
           signature=$(echo -n -e "$message"|iconv -t utf8 |openssl dgst -sha256 -hmac ${{ secrets.NCP_SECRET_ACCESS_KEY_DEPLOY }} -binary|openssl enc -base64)
           echo "SIGNATURE2=$signature" >> $GITHUB_OUTPUT
@@ -127,11 +127,11 @@ jobs:
       
           TIMESTAMP=${{ steps.extract_timestamp.outputs.TIMESTAMP }}
           echo "TIMESTAMP="${{ steps.extract_timestamp.outputs.TIMESTAMP }}
-          ACCESSKEY="A401F1FB117891E8BD14"				# access key id (from portal or Sub Account)
+          ACCESSKEY="A401F1FB117891E8BD14"				# access key id (from portal or Sub Account) # 하드코딩했는데도 ** 표시 됨
           SECRETKEY="D68F83480BB50A42B678B74EBEBAE7E72029135C"				# secret key (from portal or Sub Account)
       
           METHOD="GET"
-          URI="https://sourcedeploy.apigw.ntruss.com/api/v1/project"
+          URI="/api/v1/project"
       
           SIG="$METHOD"' '"$URI"${nl}
           SIG+="$TIMESTAMP"${nl}
