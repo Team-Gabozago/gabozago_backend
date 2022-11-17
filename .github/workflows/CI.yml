@@ -141,9 +141,9 @@ jobs:
           
       - name: request deploy
         run: |
-          echo ${{ steps.extract_signature.outputs.SIGNATURE }}
-          echo ${{ steps.extract_signature2.outputs.SIGNATURE2 }}
-          echo ${{ steps.extract_signature_hardCoding.outputs.SIGNATURE_h }}
+          echo "SIGNATURE "${{ steps.extract_signature.outputs.SIGNATURE }}
+          echo "SIGNATURE2  "${{ steps.extract_signature2.outputs.SIGNATURE2 }}
+          echo "SIGNATURE_h "${{ steps.extract_signature_hardCoding.outputs.SIGNATURE_h }}
           echo "\n\nSIGNATURE"
           curl -i -X GET \
           -H "x-ncp-apigw-timestamp:${{ steps.extract_timestamp.outputs.TIMESTAMP }}" \
