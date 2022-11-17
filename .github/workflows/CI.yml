@@ -98,7 +98,7 @@ jobs:
           message="GET /api/v1/project"$'\n'${{ steps.extract_timestamp.outputs.TIMESTAMP }}$'\n'${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}
           echo -n -e "message="$message
           signature=$(echo -n -e "$message"|iconv -t utf8 |openssl dgst -sha256 -hmac ${{ secrets.NCP_SECRET_ACCESS_KEY_DEPLOY }} -binary|openssl enc -base64)
-          echo "SIGNATURE2=$signature" >> $GITHUB_OUTPUT
+          echo "SIGNATURE=$signature" >> $GITHUB_OUTPUT
           
           
       - name: request deploy
