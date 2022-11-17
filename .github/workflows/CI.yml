@@ -97,7 +97,7 @@ jobs:
         run: |
           echo "TIMESTAMP="${{ steps.extract_timestamp.outputs.TIMESTAMP }}
           METHOD="GET"
-          URI="https://sourcedeploy.apigw.ntruss.com/api/v1/project"
+          URI="https://sourcedeploy.apigw.ntruss.com/api/v1/project?projectName=wontu-code-deploy&pageSize=1&pageNo=1"
           
           nl=$'\\n'
           message="$METHOD"' '"$URI"${nl}
