@@ -42,7 +42,6 @@ public class ObjectStorageServiceTest {
         String url = objectStorageService.upload(multipartFile,fileName);
         log.info("url: {}",url);
 
-
         // then
         assertTrue(url.endsWith("png"));
         assertTrue(url.startsWith("https"));
