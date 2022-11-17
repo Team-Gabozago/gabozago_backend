@@ -11,7 +11,9 @@ public enum ErrorCode implements EnumModel {
 
     // COMMON
     UNAUTHENTICATED(403, "A001", "인증되지 않은 사용자입니다."),
-    UNAUTHORIZED(401, "A002", "권한이 없는 사용자입니다.");
+    UNAUTHORIZED(401, "A002", "권한이 없는 사용자입니다."),
+    FAIL_TO_UPLOAD_IMAGES(500,"B001","이미지 업로드에 실패했습니다");
+
 
     private int status;
     private String code;

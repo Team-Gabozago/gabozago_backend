@@ -18,19 +18,38 @@ repositories {
 	mavenCentral()
 }
 
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	//https://docs.aws.amazon.com/ko_kr/sdk-for-java/v1/developer-guide/setup-project-gradle.html
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.12.338')
+	implementation "com.amazonaws:aws-java-sdk-s3:1.11.238"
+
+	testImplementation group: 'junit', name: 'junit', version: '4.11'
+	testImplementation 'org.projectlombok:lombok:1.18.22'
+	testImplementation platform('com.amazonaws:aws-java-sdk-bom:1.12.338')
+	testImplementation "com.amazonaws:aws-java-sdk-s3:1.11.238"
+	testImplementation 'io.findify:s3mock_2.13:0.2.6'
+	testImplementation('org.junit.jupiter:junit-jupiter:5.9.0')
+
+
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
 
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 }
+
+
 
 tasks.named('test') {
 	useJUnitPlatform()
