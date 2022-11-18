@@ -1,12 +1,11 @@
 package com.gabozago.backend.feed.interfaces;
 
+import com.gabozago.backend.entity.User;
 import com.gabozago.backend.feed.interfaces.dto.FeedRequest;
 import com.gabozago.backend.feed.interfaces.dto.FeedResponse;
 import com.gabozago.backend.feed.service.FeedService;
 import com.gabozago.backend.feed.service.LikeService;
-import com.gabozago.backend.entity.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URI;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/feeds")
@@ -26,10 +24,8 @@ public class FeedApiController {
     private final FeedService feedService;
     private final LikeService likeService;
 
-    // TODO 조회수
-
     @PostMapping
-    public ResponseEntity<Void> registerFeed(@AuthenticationPrincipal User user,
+    public ResponseEntity<FeedRequest> registerFeed(@AuthenticationPrincipal User user,
             @ModelAttribute @Valid FeedRequest request) {
         Long feedId = feedService.create(user, request);
         return ResponseEntity.created(URI.create("/feeds/" + feedId)).build();
@@ -39,12 +35,11 @@ public class FeedApiController {
     public ResponseEntity<FeedResponse> findById(@AuthenticationPrincipal User user, @PathVariable Long feedId,
             HttpServletRequest request, HttpServletResponse response,
             @CookieValue(name = "view", required = false, defaultValue = "/") String cookieValue) {
-
+        // TODO: 유저 로그 수집
         String ipAddress = request.getHeader("X-FORWARDED-FOR");
+        // Logger.info("feedId: {}, ip: {}", feedId, ipAddress);
 
-        log.info("feedId: {}, ip: {}", feedId, ipAddress);
-
-        // TODO 조회수
+        // TODO: 조회수
 
         FeedResponse feedResponse = feedService.getFeed(user, feedId);
         return ResponseEntity.ok(feedResponse);

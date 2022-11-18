@@ -4,6 +4,7 @@ import com.gabozago.backend.exception.EntityNotFoundException;
 import com.gabozago.backend.exception.ErrorCode;
 import com.gabozago.backend.exception.NotFoundException;
 import com.gabozago.backend.exception.UnauthorizedException;
+import com.gabozago.backend.feed.domain.Category;
 import com.gabozago.backend.feed.domain.Feed;
 import com.gabozago.backend.feed.domain.Location;
 import com.gabozago.backend.feed.infrastructure.CategoryRepository;
@@ -12,13 +13,11 @@ import com.gabozago.backend.feed.interfaces.dto.FeedRequest;
 import com.gabozago.backend.feed.interfaces.dto.FeedResponse;
 import com.gabozago.backend.entity.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class FeedService {
 
@@ -29,10 +28,9 @@ public class FeedService {
     private final FeedRepository feedRepository;
 
     public Long create(User user, FeedRequest request) {
-        Feed feed = request.toEntity().writtenBy(user);
-        feed.setCategory(
-                categoryRepository.findById(request.getCategoryId()).orElseThrow(EntityNotFoundException::new));
-
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(EntityNotFoundException::new);
+        Feed feed = request.toEntity(user, category);
         Feed savedFeed = feedRepository.save(feed);
         return savedFeed.getId();
     }
@@ -45,17 +43,20 @@ public class FeedService {
     }
 
     public void update(User user, Long feedId, FeedRequest request) {
-        Feed feed = user.findMyFeed(feedId);
+        Feed findFeed = findEntityById(feedId);
+        if (findFeed.notSameAuthor(user)) {
+            // TODO: 예외처리
+            throw new IllegalArgumentException("수정 권한이 없습니다.");
+        }
 
-        feed.update(
-            request.getTitle(),
-            request.getContent()
-        );
-
-        // TODO 이미지
-
-        feed.setCategory(categoryRepository.findById(request.getCategoryId()).orElseThrow(EntityNotFoundException::new));
-        feed.setLocation(new Location(request.getLongitude(), request.getLatitude()));
+        Category category = categoryRepository.findById(request.getCategoryId())
+                .orElseThrow(EntityNotFoundException::new);
+        findFeed.update(
+                category,
+                request.getTitle(),
+                request.getContent(),
+                new Location(request.getLongitude(), request.getLatitude()));
+        // TODO: 이미지 업데이트
     }
 
     public FeedResponse viewFeed(User user, Long feedId, boolean alreadyView) {
@@ -67,7 +68,7 @@ public class FeedService {
     }
 
     public void delete(User user, Long feedId) {
-        Feed findFeed  = feedRepository.findById(feedId)
+        Feed findFeed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new NotFoundException(ErrorCode.FEED_NOT_FOUND));
         if (findFeed.notSameAuthor(user)) {
             throw new UnauthorizedException(ErrorCode.UNAUTHORIZED_DELETE_FEED);
@@ -79,7 +80,6 @@ public class FeedService {
         feedRepository.delete(findFeed);
     }
 
-    @Transactional(readOnly = true)
     public Feed findEntityById(Long feedId) {
         return feedRepository.findById(feedId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.FEED_NOT_FOUND));

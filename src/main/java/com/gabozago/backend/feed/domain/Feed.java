@@ -67,7 +67,6 @@ public class Feed extends AbstractEntity {
         this.comments = new ArrayList<>();
     }
 
-
     public void setCategory(Category category) {
         this.category = category;
     }
@@ -82,9 +81,11 @@ public class Feed extends AbstractEntity {
         return this;
     }
 
-    public void update(String title, String content) {
+    public void update(Category category, String title, String content, Location location) {
+        this.category = category;
         this.title = title;
         this.content = content;
+        this.location = location;
     }
 
     public boolean notSameAuthor(User user) {
@@ -137,8 +138,10 @@ public class Feed extends AbstractEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Feed feed = (Feed) o;
         return Objects.equals(id, feed.id);
     }

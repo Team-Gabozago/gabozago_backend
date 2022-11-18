@@ -35,9 +35,9 @@ public class FeedResponse {
 
     private final LocalDateTime updatedAt;
 
-
-    public FeedResponse(AuthorResponse author, Long id, Category category, Location location, String title, String content, int likes, int views,
-                        boolean liked, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public FeedResponse(AuthorResponse author, Long id, Category category, Location location, String title,
+            String content, int likes, int views,
+            boolean liked, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.author = author;
         this.id = id;
         this.category = category;
@@ -52,7 +52,8 @@ public class FeedResponse {
     }
 
     public static FeedResponse of(User author, Feed feed, boolean liked) {
-        return new FeedResponse(AuthorResponse.of(author), feed.getId(), feed.getCategory(), feed.getLocation(), feed.getTitle(), feed.getContent(),
+        return new FeedResponse(AuthorResponse.of(author), feed.getId(), feed.getCategory(), feed.getLocation(),
+                feed.getTitle(), feed.getContent(),
                 feed.getLikes().size(), feed.getViews(), liked, feed.getCreatedAt(), feed.getUpdatedAt());
     }
 

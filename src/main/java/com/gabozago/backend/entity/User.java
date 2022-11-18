@@ -66,18 +66,6 @@ public class User implements UserDetails {
     @Builder.Default
     private List<Like> likes = new ArrayList<>();
 
-    @Builder
-    public User(Long id, String email, String username, String nickname) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.nickname = nickname;
-        // this.imageUrl = imageUrl;
-        this.feeds = new ArrayList<>();
-        this.likes = new ArrayList<>();
-        this.comments = new ArrayList<>();
-    }
-
     public boolean sameAs(User user) {
         return this.equals(user);
     }
