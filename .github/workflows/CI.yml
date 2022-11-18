@@ -9,9 +9,9 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "develop" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "develop" ]
 
 permissions:
   contents: read
@@ -30,6 +30,16 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
 
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{runner.os}}-gradle-${{hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys:
+            ${{runner.os}}-gradle-
+
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
@@ -47,6 +57,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build
 
+      - name: Test with Gradle
+        run: ./gradlew --info test
+
       # Object Storage에 업로드할 파일만 모을 server 디렉터리 생성
       - name: make server directory
         run:  mkdir -p server
@@ -55,11 +68,11 @@ jobs:
       - name: Copy Jar
         run: cp ./build/libs/*.jar ./server
 
-      # 3. script files 복사
+      # 2. script files 복사
       - name: Copy script
         run: cp ./scripts/*.sh ./server
 
-      # 파일 압축
+      # 3. 파일 압축
       - name: Make zip file and move to server directory
         run: zip -r ./wontu-webserver.zip ./server
 
@@ -73,3 +86,30 @@ jobs:
           s3 cp ./wontu-webserver.zip \
           --region ap-northeast-2 \
           s3://wontu-object-storage-bucket
+
+      ## SourceDeploy에 배포 요청
+      # 1. 타임스탬프 만들기
+      - name: make timestamp
+        id: extract_timestamp
+        run: |
+          echo "TIMESTAMP=$(($(date +%s%N)/1000000))" >> $GITHUB_OUTPUT
+
+      # 2. 시그니처 생성
+      - name: make signature
+        id: extract_signature
+        run: |
+          message="POST /api/v1/project/4679/stage/5401/scenario/5646/deploy"$'\n'${{ steps.extract_timestamp.outputs.TIMESTAMP }}$'\n'${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}
+          echo -n -e "message="$message
+          signature=$(echo -n -e "$message"|iconv -t utf8 |openssl dgst -sha256 -hmac ${{ secrets.NCP_SECRET_ACCESS_KEY_DEPLOY }} -binary|openssl enc -base64)
+          echo "SIGNATURE=$signature" >> $GITHUB_OUTPUT
+
+      # 3. SourceDeploy API에 배포 요청
+      - name: request deploy
+        run: |
+          curl -i -X POST \
+          -H "x-ncp-apigw-timestamp:${{ steps.extract_timestamp.outputs.TIMESTAMP }}" \
+          -H "x-ncp-iam-access-key:${{ secrets.NCP_ACCESS_KEY_ID_DEPLOY }}" \
+          -H "x-ncp-apigw-signature-v2:${{ steps.extract_signature.outputs.SIGNATURE}}" \
+          'https://sourcedeploy.apigw.ntruss.com/api/v1/project/4679/stage/5401/scenario/5646/deploy'
+
+      
