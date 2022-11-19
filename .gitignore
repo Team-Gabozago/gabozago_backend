@@ -23,8 +23,8 @@ bin/
 *.iml
 *.ipr
 *.txt
-*.yml
-*.properties
+application.yml
+application.properties
 *.docx
 out/
 !**/src/main/**/out/
