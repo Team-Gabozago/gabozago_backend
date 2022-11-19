@@ -1,6 +1,6 @@
 package com.gabozago.backend.config;
 
-import com.gabozago.backend.jwt.CorsFilter;
+import com.gabozago.backend.auth.CorsFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

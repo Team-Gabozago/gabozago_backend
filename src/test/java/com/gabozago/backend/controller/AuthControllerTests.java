@@ -5,7 +5,7 @@ import com.gabozago.backend.dto.auth.LoginRequestDto;
 import com.gabozago.backend.entity.RefreshToken;
 import com.gabozago.backend.entity.User;
 import com.gabozago.backend.error.ErrorCode;
-import com.gabozago.backend.jwt.TokenProvider;
+import com.gabozago.backend.auth.TokenProvider;
 import com.gabozago.backend.service.RefreshTokenService;
 import com.gabozago.backend.service.UserService;
 import org.json.JSONObject;

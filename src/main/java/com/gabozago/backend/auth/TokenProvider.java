@@ -1,4 +1,4 @@
-package com.gabozago.backend.jwt;
+package com.gabozago.backend.auth;
 
 import com.gabozago.backend.entity.RefreshToken;
 import com.gabozago.backend.entity.User;
