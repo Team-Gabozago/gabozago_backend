@@ -34,7 +34,7 @@ public class AuthController {
         return ResponseEntity.ok("this is auth controller");
     }
 
-    @PostMapping("/join")
+    @PostMapping(path = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> join(final @Valid @RequestBody JoinRequestDto user) {
         if (userService.checkExistsByEmail(user.getEmail())) {
@@ -52,10 +52,10 @@ public class AuthController {
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
 
-        return ResponseEntity.ok("{\"message\": \"join success\"}");
+        return new ResponseEntity<>("{\"message\": \"login success\"}", HttpStatus.OK);
     }
 
-    @PostMapping("/login")
+    @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> login(final @Valid @RequestBody LoginRequestDto request) {
         String email = request.getEmail();
         User user;
@@ -83,7 +83,7 @@ public class AuthController {
         return new ResponseEntity<>("{\"message\": \"login success\"}", headers, HttpStatus.OK);
     }
 
-    @PostMapping("/refresh")
+    @PostMapping(path = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> refresh(@CookieValue("refreshToken") String refreshToken) {
         RefreshToken token;
 
@@ -102,7 +102,7 @@ public class AuthController {
         return new ResponseEntity<>("{\"message\": \"refresh success\"}", headers, HttpStatus.OK);
     }
 
-    @GetMapping("/needAuth")
+    @GetMapping(value = "/needAuth", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> needAuth() {
         return ResponseEntity.ok("{\"message\": \"auth success\"}");
     }
