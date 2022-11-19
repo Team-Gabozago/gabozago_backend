@@ -52,7 +52,7 @@ public class AuthController {
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
 
-        return ResponseEntity.ok("join success");
+        return ResponseEntity.ok("{\"message\": \"join success\"}");
     }
 
     @PostMapping("/login")
@@ -80,7 +80,7 @@ public class AuthController {
         headers.setAccessToken(accessToken);
         headers.setRefreshToken(refreshToken.getToken());
 
-        return new ResponseEntity<>("login success", headers, HttpStatus.OK);
+        return new ResponseEntity<>("{\"message\": \"login success\"}", headers, HttpStatus.OK);
     }
 
     @PostMapping("/refresh")
@@ -99,11 +99,11 @@ public class AuthController {
 
         headers.setAccessToken(accessToken);
 
-        return new ResponseEntity<>("refresh success", headers, HttpStatus.OK);
+        return new ResponseEntity<>("{\"message\": \"refresh success\"}", headers, HttpStatus.OK);
     }
 
     @GetMapping("/needAuth")
     public ResponseEntity<String> needAuth() {
-        return ResponseEntity.ok("auth success");
+        return ResponseEntity.ok("{\"message\": \"auth success\"}");
     }
 }
