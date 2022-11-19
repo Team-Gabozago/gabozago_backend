@@ -11,7 +11,7 @@ public class AuthHttpHeaders extends HttpHeaders {
 
     public void setAccessToken(String accessToken) {
         this.set(AUTHORIZATION, BEARER + accessToken);
-        this.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        this.setContentType(MediaType.APPLICATION_JSON);
 
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
