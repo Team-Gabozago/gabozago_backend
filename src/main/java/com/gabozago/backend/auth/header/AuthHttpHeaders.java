@@ -1,4 +1,4 @@
-package com.gabozago.backend.http.header;
+package com.gabozago.backend.auth.header;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

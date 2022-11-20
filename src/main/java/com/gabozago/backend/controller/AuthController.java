@@ -6,7 +6,7 @@ import com.gabozago.backend.entity.RefreshToken;
 import com.gabozago.backend.entity.User;
 import com.gabozago.backend.error.ErrorCode;
 import com.gabozago.backend.error.ErrorResponse;
-import com.gabozago.backend.http.header.AuthHttpHeaders;
+import com.gabozago.backend.auth.header.AuthHttpHeaders;
 import com.gabozago.backend.auth.TokenProvider;
 import com.gabozago.backend.service.RefreshTokenService;
 import com.gabozago.backend.service.UserService;
