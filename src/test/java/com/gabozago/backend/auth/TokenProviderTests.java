@@ -1,9 +1,9 @@
 package com.gabozago.backend.auth;
 
 
-import com.gabozago.backend.entity.RefreshToken;
-import com.gabozago.backend.entity.User;
-import com.gabozago.backend.service.UserService;
+import com.gabozago.backend.user.domain.RefreshToken;
+import com.gabozago.backend.user.domain.User;
+import com.gabozago.backend.user.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.gabozago.backend.controller.annotation;
+package com.gabozago.backend.annotation;
 
 import org.springframework.security.test.context.support.WithSecurityContext;
 

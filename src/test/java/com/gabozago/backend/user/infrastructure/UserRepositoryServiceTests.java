@@ -1,6 +1,7 @@
-package com.gabozago.backend.repository;
+package com.gabozago.backend.user.infrastructure;
 
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
+import com.gabozago.backend.user.infrastructure.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,9 +51,9 @@ public class UserRepositoryServiceTests {
 
         userRepository.save(user);
 
-        User userOptional = userRepository.findByNickname(user.getNickname())
+        User userOptional = userRepository.findByNickname(user.getNickName())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        assertEquals(userOptional.getNickname(), "test");
+        assertEquals(userOptional.getNickName(), "test");
     }
 }

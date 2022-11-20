@@ -1,7 +1,8 @@
-package com.gabozago.backend.service;
+package com.gabozago.backend.user.service;
 
-import com.gabozago.backend.repository.UserRepository;
-import org.aspectj.lang.annotation.Before;
+import com.gabozago.backend.user.domain.User;
+import com.gabozago.backend.user.service.UserService;
+import com.gabozago.backend.user.infrastructure.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ public class UserServiceTests {
     void testCheckExistsByEmail() {
         String email = "test@example.com";
         Mockito.when(userRepository.findByEmail(email)).
-                thenReturn(java.util.Optional.of(new com.gabozago.backend.entity.User()));
+                thenReturn(java.util.Optional.of(new User()));
 
         boolean userExists = userService.checkExistsByEmail("test@example.com");
         assertTrue(userExists);
@@ -44,7 +45,7 @@ public class UserServiceTests {
     void testCheckExistsByNickname() {
         String nickname = "test";
         Mockito.when(userRepository.findByNickname(nickname)).
-                thenReturn(java.util.Optional.of(new com.gabozago.backend.entity.User()));
+                thenReturn(java.util.Optional.of(new User()));
 
         boolean userExists = userService.checkExistsByNickname("test");
         assertTrue(userExists);

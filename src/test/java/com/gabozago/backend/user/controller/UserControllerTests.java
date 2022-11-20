@@ -1,6 +1,7 @@
-package com.gabozago.backend.controller;
+package com.gabozago.backend.user.controller;
 
-import com.gabozago.backend.controller.annotation.WithAuthUser;
+import com.gabozago.backend.annotation.WithAuthUser;
+import com.gabozago.backend.user.interfaces.UserController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

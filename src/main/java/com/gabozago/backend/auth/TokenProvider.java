@@ -1,7 +1,7 @@
 package com.gabozago.backend.auth;
 
-import com.gabozago.backend.entity.RefreshToken;
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.RefreshToken;
+import com.gabozago.backend.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

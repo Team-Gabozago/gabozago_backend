@@ -1,6 +1,6 @@
 package com.gabozago.backend.feed.service;
 
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 import com.gabozago.backend.exception.BadRequestException;
 import com.gabozago.backend.exception.ErrorCode;
 import com.gabozago.backend.feed.domain.Feed;

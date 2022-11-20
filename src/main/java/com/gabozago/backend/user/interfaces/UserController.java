@@ -1,8 +1,8 @@
-package com.gabozago.backend.controller;
+package com.gabozago.backend.user.interfaces;
 
 
-import com.gabozago.backend.dto.user.GetMeResponseDto;
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.interfaces.dto.user.GetMeResponseDto;
+import com.gabozago.backend.user.domain.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,7 +19,7 @@ public class UserController {
 
         GetMeResponseDto response = GetMeResponseDto.builder()
                 .email(user.getEmail())
-                .nickname(user.getNickname())
+                .nickname(user.getNickName())
                 .phoneNumber(user.getPhoneNumber())
                 .build();
 

@@ -1,4 +1,4 @@
-package com.gabozago.backend.dto.auth;
+package com.gabozago.backend.user.interfaces.dto.auth;
 
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
-package com.gabozago.backend.service;
+package com.gabozago.backend.user.service;
 
-import com.gabozago.backend.entity.RefreshToken;
-import com.gabozago.backend.repository.RefreshTokenRepository;
+import com.gabozago.backend.user.domain.RefreshToken;
+import com.gabozago.backend.user.infrastructure.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

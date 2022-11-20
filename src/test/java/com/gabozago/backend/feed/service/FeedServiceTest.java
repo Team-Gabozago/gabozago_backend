@@ -1,6 +1,6 @@
 package com.gabozago.backend.feed.service;
 
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 import com.gabozago.backend.exception.ErrorCode;
 import com.gabozago.backend.exception.NotFoundException;
 import com.gabozago.backend.exception.UnauthorizedException;
@@ -9,7 +9,7 @@ import com.gabozago.backend.feed.domain.Feed;
 import com.gabozago.backend.feed.infrastructure.CategoryRepository;
 import com.gabozago.backend.feed.interfaces.dto.FeedRequest;
 import com.gabozago.backend.feed.interfaces.dto.FeedResponse;
-import com.gabozago.backend.repository.UserRepository;
+import com.gabozago.backend.user.infrastructure.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

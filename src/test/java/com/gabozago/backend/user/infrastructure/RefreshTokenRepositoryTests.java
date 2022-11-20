@@ -1,6 +1,7 @@
-package com.gabozago.backend.repository;
+package com.gabozago.backend.user.infrastructure;
 
-import com.gabozago.backend.entity.RefreshToken;
+import com.gabozago.backend.user.domain.RefreshToken;
+import com.gabozago.backend.user.infrastructure.RefreshTokenRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

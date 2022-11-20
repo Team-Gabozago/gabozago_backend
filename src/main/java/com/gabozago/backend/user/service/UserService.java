@@ -1,7 +1,7 @@
-package com.gabozago.backend.service;
+package com.gabozago.backend.user.service;
 
-import com.gabozago.backend.entity.User;
-import com.gabozago.backend.repository.UserRepository;
+import com.gabozago.backend.user.domain.User;
+import com.gabozago.backend.user.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

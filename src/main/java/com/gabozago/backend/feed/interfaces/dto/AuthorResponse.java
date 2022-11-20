@@ -1,6 +1,6 @@
 package com.gabozago.backend.feed.interfaces.dto;
 
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 import lombok.Getter;
 
 @Getter

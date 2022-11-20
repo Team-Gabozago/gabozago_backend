@@ -1,13 +1,14 @@
-package com.gabozago.backend.controller;
+package com.gabozago.backend.user.controller;
 
-import com.gabozago.backend.dto.auth.JoinRequestDto;
-import com.gabozago.backend.dto.auth.LoginRequestDto;
-import com.gabozago.backend.entity.RefreshToken;
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.interfaces.dto.auth.JoinRequestDto;
+import com.gabozago.backend.user.interfaces.dto.auth.LoginRequestDto;
+import com.gabozago.backend.user.domain.RefreshToken;
+import com.gabozago.backend.user.domain.User;
 import com.gabozago.backend.error.ErrorCode;
 import com.gabozago.backend.auth.TokenProvider;
-import com.gabozago.backend.service.RefreshTokenService;
-import com.gabozago.backend.service.UserService;
+import com.gabozago.backend.user.interfaces.AuthController;
+import com.gabozago.backend.user.service.RefreshTokenService;
+import com.gabozago.backend.user.service.UserService;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

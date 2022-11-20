@@ -8,7 +8,7 @@ import com.gabozago.backend.feed.infrastructure.CommentRepository;
 import com.gabozago.backend.feed.interfaces.dto.CommentRequest;
 import com.gabozago.backend.feed.interfaces.dto.CommentResponse;
 import com.gabozago.backend.feed.interfaces.dto.ReplyResponse;
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;

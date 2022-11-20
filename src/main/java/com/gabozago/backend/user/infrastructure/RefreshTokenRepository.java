@@ -1,6 +1,6 @@
-package com.gabozago.backend.repository;
+package com.gabozago.backend.user.infrastructure;
 
-import com.gabozago.backend.entity.RefreshToken;
+import com.gabozago.backend.user.domain.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

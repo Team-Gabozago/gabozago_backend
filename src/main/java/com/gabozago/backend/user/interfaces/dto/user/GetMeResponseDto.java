@@ -1,4 +1,4 @@
-package com.gabozago.backend.dto.user;
+package com.gabozago.backend.user.interfaces.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -1,7 +1,9 @@
-package com.gabozago.backend.service;
+package com.gabozago.backend.user.service;
 
-import com.gabozago.backend.entity.RefreshToken;
-import com.gabozago.backend.repository.RefreshTokenRepository;
+import com.gabozago.backend.user.domain.RefreshToken;
+import com.gabozago.backend.user.domain.User;
+import com.gabozago.backend.user.service.RefreshTokenService;
+import com.gabozago.backend.user.infrastructure.RefreshTokenRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,7 @@ public class RefreshTokenServiceTests {
                 .token("test")
                 .expiredAt(Timestamp.valueOf("2023-01-01 00:00:00"))
                 .isValid(true)
-                .user(Mockito.mock(com.gabozago.backend.entity.User.class))
+                .user(Mockito.mock(User.class))
                 .build();
 
         Mockito.when(refreshTokenRepository.findByTokenAndExpiredAtBefore(eq(refreshToken.getToken()), any()))
@@ -57,7 +59,7 @@ public class RefreshTokenServiceTests {
                 .token("test")
                 .expiredAt(Timestamp.valueOf("2023-01-01 00:00:00"))
                 .isValid(true)
-                .user(Mockito.mock(com.gabozago.backend.entity.User.class))
+                .user(Mockito.mock(User.class))
                 .build();
 
         Mockito.when(refreshTokenRepository.findByTokenAndExpiredAtBefore(eq(refreshToken.getToken()), any()))

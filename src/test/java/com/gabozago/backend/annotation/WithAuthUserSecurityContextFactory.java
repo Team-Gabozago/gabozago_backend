@@ -1,6 +1,6 @@
-package com.gabozago.backend.controller.annotation;
+package com.gabozago.backend.annotation;
 
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;

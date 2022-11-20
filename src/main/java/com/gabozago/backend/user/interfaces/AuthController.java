@@ -1,15 +1,15 @@
-package com.gabozago.backend.controller;
+package com.gabozago.backend.user.interfaces;
 
-import com.gabozago.backend.dto.auth.JoinRequestDto;
-import com.gabozago.backend.dto.auth.LoginRequestDto;
-import com.gabozago.backend.entity.RefreshToken;
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.interfaces.dto.auth.JoinRequestDto;
+import com.gabozago.backend.user.interfaces.dto.auth.LoginRequestDto;
+import com.gabozago.backend.user.domain.RefreshToken;
+import com.gabozago.backend.user.domain.User;
 import com.gabozago.backend.error.ErrorCode;
 import com.gabozago.backend.error.ErrorResponse;
 import com.gabozago.backend.auth.header.AuthHttpHeaders;
 import com.gabozago.backend.auth.TokenProvider;
-import com.gabozago.backend.service.RefreshTokenService;
-import com.gabozago.backend.service.UserService;
+import com.gabozago.backend.user.service.RefreshTokenService;
+import com.gabozago.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;

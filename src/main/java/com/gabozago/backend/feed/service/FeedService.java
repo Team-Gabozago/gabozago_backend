@@ -11,7 +11,7 @@ import com.gabozago.backend.feed.infrastructure.CategoryRepository;
 import com.gabozago.backend.feed.infrastructure.FeedRepository;
 import com.gabozago.backend.feed.interfaces.dto.FeedRequest;
 import com.gabozago.backend.feed.interfaces.dto.FeedResponse;
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

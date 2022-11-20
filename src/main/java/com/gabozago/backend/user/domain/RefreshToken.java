@@ -1,4 +1,4 @@
-package com.gabozago.backend.entity;
+package com.gabozago.backend.user.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

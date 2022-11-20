@@ -1,4 +1,4 @@
-package com.gabozago.backend.entity;
+package com.gabozago.backend.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gabozago.backend.exception.ErrorCode;
