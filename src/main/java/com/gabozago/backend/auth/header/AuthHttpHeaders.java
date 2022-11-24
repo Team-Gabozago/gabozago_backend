@@ -20,7 +20,6 @@ public class AuthHttpHeaders extends HttpHeaders {
                 .maxAge(60 * 60 * 2) // 2 hours
                 .secure(true)
                 .sameSite("None")
-                .domain("http://localhost")
                 .path("/login")
                 .build();
 
@@ -33,7 +32,6 @@ public class AuthHttpHeaders extends HttpHeaders {
                 .maxAge(60 * 60 * 24 * 30) // 30 days
                 .secure(true)
                 .sameSite("None")
-                .domain("http://localhost")
                 .path("/login")
                 .build();
 
