@@ -20,7 +20,8 @@ public class AuthHttpHeaders extends HttpHeaders {
                 .maxAge(60 * 60 * 2) // 2 hours
                 .secure(true)
                 .sameSite("None")
-                .path(String.valueOf(request.getRequestURL()))
+                .domain(request.getServerName())
+                .path("/login")
                 .build();
 
         this.add(HttpHeaders.SET_COOKIE, accessCookie.toString());
@@ -32,7 +33,8 @@ public class AuthHttpHeaders extends HttpHeaders {
                 .maxAge(60 * 60 * 24 * 30) // 30 days
                 .secure(true)
                 .sameSite("None")
-                .path(String.valueOf(request.getRequestURL()))
+                .domain(request.getServerName())
+                .path("/login")
                 .build();
 
         this.add(HttpHeaders.SET_COOKIE, refreshCookie.toString());
