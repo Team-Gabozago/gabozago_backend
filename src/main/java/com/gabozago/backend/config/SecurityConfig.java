@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/auth/join", "/auth/login", "/auth/refresh").permitAll()
+                .antMatchers("/", "/ping", "/auth/join", "/auth/login", "/auth/refresh").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(new AuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 
