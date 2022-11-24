@@ -15,6 +15,7 @@ import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Collections;
 
@@ -56,8 +57,8 @@ public class AuthController {
     }
 
     @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> login(final @Valid @RequestBody LoginRequestDto request) {
-        String email = request.getEmail();
+    public ResponseEntity<String> login(final @Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
+        String email = loginRequestDto.getEmail();
         User user;
 
         try {
@@ -66,7 +67,7 @@ public class AuthController {
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.USER_NOT_FOUND).parseJson(), HttpStatus.NOT_FOUND);
         }
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.PASSWORD_WRONG).parseJson(), HttpStatus.UNAUTHORIZED);
         }
 
@@ -77,14 +78,14 @@ public class AuthController {
 
         AuthHttpHeaders headers = new AuthHttpHeaders();
 
-        headers.setAccessToken(accessToken);
-        headers.setRefreshToken(refreshToken.getToken());
+        headers.setAccessToken(accessToken, request);
+        headers.setRefreshToken(refreshToken.getToken(), request);
 
         return new ResponseEntity<>("{\"message\": \"login success\"}", headers, HttpStatus.OK);
     }
 
     @PostMapping(path = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> refresh(@CookieValue("refreshToken") String refreshToken) {
+    public ResponseEntity<String> refresh(@CookieValue("refreshToken") String refreshToken, HttpServletRequest request) {
         RefreshToken token;
 
         try {
@@ -97,7 +98,7 @@ public class AuthController {
 
         AuthHttpHeaders headers = new AuthHttpHeaders();
 
-        headers.setAccessToken(accessToken);
+        headers.setAccessToken(accessToken, request);
 
         return new ResponseEntity<>("{\"message\": \"refresh success\"}", headers, HttpStatus.OK);
     }
