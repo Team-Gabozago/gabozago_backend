@@ -24,7 +24,6 @@ public class ObjectStorageService {
     @Value("${cloud.ncp.objectStorage.uploadImages.bucket}")
     private String bucketName;
 
-
     // 1. 로컬에 파일 생성(MultipartFile을 File로 변환)
     private File convert(MultipartFile file) throws IOException {
         File convFile = new File(file.getOriginalFilename());

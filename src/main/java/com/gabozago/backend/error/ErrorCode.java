@@ -21,6 +21,7 @@ public enum ErrorCode implements EnumModel {
     // Image
     FAIL_TO_UPLOAD_IMAGES("FAIL_TO_UPLOAD_IMAGES","Fail to upload images.");
 
+
     private String code;
     private String message;
 
