@@ -16,7 +16,10 @@ public enum ErrorCode implements EnumModel {
     UNAUTHORIZED("UNAUTHORIZED", "You are an unauthorized user."),
     PASSWORD_WRONG("PASSWORD_WRONG", "The password is wrong."),
     USER_NOT_FOUND("USER_NOT_FOUND", "User does not exist."),
-    INVALID_REFRESH_TOKEN("INVALID_REFRESH_TOKEN", "Invalid refresh token.");
+    INVALID_REFRESH_TOKEN("INVALID_REFRESH_TOKEN", "Invalid refresh token."),
+
+    // Image
+    FAIL_TO_UPLOAD_IMAGES("FAIL_TO_UPLOAD_IMAGES","Fail to upload images.");
 
     private String code;
     private String message;
