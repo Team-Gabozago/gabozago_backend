@@ -3,11 +3,13 @@ package com.gabozago.backend.image.interfaces;
 import com.gabozago.backend.error.ErrorCode;
 import com.gabozago.backend.error.ErrorResponse;
 import com.gabozago.backend.image.service.ObjectStorageService;
+import com.gabozago.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,7 +28,7 @@ public class ImageApiController {
     private final ObjectStorageService objectStorageService;
 
     @PostMapping("/upload")
-    public ResponseEntity<?> upload(@RequestParam("file") MultipartFile multipartFile) throws IOException {
+    public ResponseEntity<?> upload(@AuthenticationPrincipal User user, @RequestParam("file") MultipartFile multipartFile) throws IOException {
 
         int extIdx = multipartFile.getOriginalFilename().lastIndexOf(".");
         String extension = multipartFile.getOriginalFilename().substring(extIdx+1);
