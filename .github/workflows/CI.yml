@@ -54,8 +54,8 @@ jobs:
         run: echo "${{secrets.APPLICATION}}" > ./src/main/resources/application.yml
         shell: bash
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Build with Gradle without test
+        run: ./gradlew build -x test
 
       #- name: Test with Gradle
       #  run: ./gradlew --info test
