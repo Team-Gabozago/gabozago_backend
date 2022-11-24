@@ -50,6 +50,10 @@ public class User implements UserDetails {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @OneToOne
+    @JoinColumn(name = "profile_image_id")
+    private ProfileImage profileImage;
+
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
@@ -66,8 +70,16 @@ public class User implements UserDetails {
     @Builder.Default
     private List<Like> likes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Builder.Default
+    private List<Favorite> favorites = new ArrayList<>();
+
     public boolean sameAs(User user) {
         return this.equals(user);
+    }
+
+    public void updateProfileImage(ProfileImage profileImage) {
+        this.profileImage = profileImage;
     }
 
     public void addFeed(Feed feed) {

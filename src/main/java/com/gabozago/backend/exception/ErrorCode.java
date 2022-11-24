@@ -31,7 +31,11 @@ public enum ErrorCode {
 
     ALREADY_LIKED("이미 좋아요 누른 글 입니다."),
 
-    NOT_LIKED("좋아요를 누르지 않았습니다.");
+    NOT_LIKED("좋아요를 누르지 않았습니다."),
+
+    CATEGORY_ALREADY_EXISTS("이미 존재하는 카테고리입니다."),
+
+    CATEGORY_NOT_EXISTS("존재하지 않는 카테고리입니다.");
 
     private final String errorMsg;
 
