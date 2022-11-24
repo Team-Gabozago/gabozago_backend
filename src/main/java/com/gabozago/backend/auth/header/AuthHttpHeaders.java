@@ -18,7 +18,7 @@ public class AuthHttpHeaders extends HttpHeaders {
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
                 .maxAge(60 * 60 * 2) // 2 hours
-                .secure(true)
+                .secure(false)
                 .sameSite("None")
                 .path("/login")
                 .build();
@@ -30,7 +30,7 @@ public class AuthHttpHeaders extends HttpHeaders {
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .maxAge(60 * 60 * 24 * 30) // 30 days
-                .secure(true)
+                .secure(false)
                 .sameSite("None")
                 .path("/login")
                 .build();
