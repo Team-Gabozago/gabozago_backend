@@ -1,0 +1,19 @@
+branch-defaults:
+  kwanok/feature/codebuild:
+    environment: Wontu-env
+environment-defaults:
+  Wontu-env:
+    branch: null
+    repository: null
+global:
+  application_name: wontu
+  default_ec2_keyname: wontu
+  default_platform: Corretto 11 running on 64bit Amazon Linux 2
+  default_region: ap-northeast-2
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: eb-cli
+  sc: git
+  workspace_type: Application

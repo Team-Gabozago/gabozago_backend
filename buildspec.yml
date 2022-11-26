@@ -1,0 +1,31 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+  pre_build:
+    commands:
+      - mkdir ./src/main/resources
+      - touch ./src/main/resources/application.yml
+  build:
+    commands:
+      - echo Build Starting on `date`
+      - chmod +x ./gradlew
+      - ./gradlew build -x test
+  post_build:
+    commands:
+      - cp build/libs/backend-0.0.1-SNAPSHOT.jar application.jar
+      - pwd
+
+artifacts:
+  files:
+    - Procfile
+    - application.jar
+    - .platform
+    - .ebextensions/**/*
+
+cache:
+  paths:
+    - '/root/.gradle/caches/**/*'
+
