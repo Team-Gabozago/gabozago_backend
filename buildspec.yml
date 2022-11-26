@@ -6,14 +6,7 @@ phases:
       java: corretto11
   pre_build:
     commands:
-      - touch ./src/main/resources/application.properties
-      - echo "${spring.h2.console.enabled}" > ./src/main/resources/application.properties
-      - echo "${spring.datasource.url}" >> ./src/main/resources/application.properties
-      - echo "${spring.datasource.driver-class-name}" >> ./src/main/resources/application.properties
-      - echo "${spring.datasource.username}" >> ./src/main/resources/application.properties
-      - echo "${spring.datasource.password}" >> ./src/main/resources/application.properties
-      - echo "${spring.jpa.database-platform}" >> ./src/main/resources/application.properties
-      - cat ./src/main/resources/application.properties
+      - touch ./src/main/resources/application.yml
   build:
     commands:
       - echo Build Starting on `date`
