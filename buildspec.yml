@@ -9,7 +9,7 @@ phases:
   post_build:
     commands:
       - echo $(basename deploy/application.jar)
-      - mv build/libs/*.jar application.jar
+      - cp build/libs/*.jar application.jar
       - pwd
 
 artifacts:
