@@ -8,7 +8,7 @@ phases:
       - ./gradlew build -x test
   post_build:
     commands:
-      - mv build/libs/*.jar application.jar
+      - cp build/libs/*.jar application.jar
       - pwd
 
 artifacts:
