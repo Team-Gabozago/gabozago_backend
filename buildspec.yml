@@ -8,13 +8,14 @@ phases:
       - ./gradlew build -x test
   post_build:
     commands:
-      - cp build/libs/*.jar application.jar
+      - cp build/libs/application.jar application.jar
       - pwd
 
 artifacts:
   files:
     - Procfile
     - application.jar
+    - build/libs/application.jar
     - .ebextensions/**/*
   discard-paths: yes
 
