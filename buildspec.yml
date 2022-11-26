@@ -15,7 +15,7 @@ artifacts:
   files:
     - Procfile
     - application.jar
-    - build/libs/application.jar
+    - .platform
     - .ebextensions/**/*
   discard-paths: yes
 
