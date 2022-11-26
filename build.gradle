@@ -12,7 +12,6 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-	jar.archiveFileName = 'application.jar'
 }
 
 repositories {
@@ -54,4 +53,8 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar {
+	enabled = false
 }
