@@ -6,6 +6,7 @@ phases:
       - echo Build Starting on `date`
       - chmod -x ./gradlew
       - ./gradlew build
+      - cp build/libs/*.jar deploy/application.jar
   post_build:
     commands:
       - echo $(basename ./build/libs/*.jar)
@@ -13,8 +14,9 @@ phases:
 
 artifacts:
   files:
-    - appspec.yml
-    - build/libs/*.jar
+    - Procfile
+    - deploy/application.jar
+    - .ebextensions/**/*
   discard-paths: yes
 
 cache:
