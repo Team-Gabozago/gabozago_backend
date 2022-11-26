@@ -9,7 +9,7 @@ phases:
   post_build:
     commands:
       - echo $(basename build/libs/*.jar)
-      - cp build/libs/application.jar application.jar
+      - mv build/libs/application.jar application.jar
       - pwd
 
 artifacts:
