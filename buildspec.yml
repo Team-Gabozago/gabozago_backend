@@ -8,8 +8,8 @@ phases:
       - ./gradlew build
   post_build:
     commands:
-      - echo $(basename deploy/application.jar)
-      - cp build/libs/*.jar application.jar
+      - echo $(basename build/libs/*.jar)
+      - cp $(basename build/libs/*.jar) application.jar
       - pwd
 
 artifacts:
