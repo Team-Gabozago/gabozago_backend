@@ -6,11 +6,10 @@ phases:
       - echo Build Starting on `date`
       - chmod -x ./gradlew
       - ./gradlew build
-      - cp
   post_build:
     commands:
-      - echo Build completed on `date`
-      - mv application.jar
+      - echo $(basename deploy/application.jar)
+      - mv build/libs/*.jar application.jar
       - pwd
 
 artifacts:
