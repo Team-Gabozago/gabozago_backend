@@ -176,4 +176,18 @@ public class User implements UserDetails {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public void update(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setPassword(String encode) {
+        this.password = encode;
+    }
+
+    public void leave() {
+        this.nickname = "expired_user_" + this.id;
+        this.email = "expired_user_" + this.id + "@expired.com";
+        this.phoneNumber = "00000000000";
+    }
 }

@@ -1,5 +1,8 @@
 package com.gabozago.backend.user.interfaces;
 
+import com.gabozago.backend.user.interfaces.dto.AuthChangePasswordRequest;
+import com.gabozago.backend.user.interfaces.dto.AuthCheckPasswordRequest;
+import com.gabozago.backend.user.interfaces.dto.AuthCheckPasswordResponse;
 import com.gabozago.backend.user.interfaces.dto.auth.JoinRequestDto;
 import com.gabozago.backend.user.interfaces.dto.auth.LoginRequestDto;
 import com.gabozago.backend.user.domain.RefreshToken;
@@ -12,6 +15,7 @@ import com.gabozago.backend.user.service.RefreshTokenService;
 import com.gabozago.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -106,5 +110,31 @@ public class AuthController {
     @GetMapping(value = "/needAuth", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> needAuth() {
         return ResponseEntity.ok("{\"message\": \"auth success\"}");
+    }
+
+    @GetMapping(value = "/check-password", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AuthCheckPasswordResponse> checkPassword(@AuthenticationPrincipal User user, final @Valid @RequestBody AuthCheckPasswordRequest request) {
+        boolean isOk = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+        return ResponseEntity.ok(
+                AuthCheckPasswordResponse.of(
+                        isOk ? "password correct." : "password incorrect.",
+                        isOk
+                )
+        );
+    }
+
+    @PatchMapping(value = "/password", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> changePassword(@AuthenticationPrincipal User user, final @Valid @RequestBody AuthChangePasswordRequest request) {
+        boolean isOk = passwordEncoder.matches(request.getPassword(), user.getPassword());
+
+        if (!isOk) {
+            return new ResponseEntity<>(new ErrorResponse(ErrorCode.PASSWORD_WRONG).parseJson(), HttpStatus.UNAUTHORIZED);
+        }
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userService.save(user);
+
+        return ResponseEntity.ok("{\"message\": \"password changed.\"}");
     }
 }

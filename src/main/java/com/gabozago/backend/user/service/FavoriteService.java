@@ -21,9 +21,12 @@ public class FavoriteService {
 
     private final CategoryRepository categoryRepository;
 
-    @Transactional
     public List<Favorite> getFavoritesByUserId(Long userId) {
         return favoriteRepository.findAllByUserId(userId);
+    }
+
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 
     public void addFavorite(User user, Long categoryId) {

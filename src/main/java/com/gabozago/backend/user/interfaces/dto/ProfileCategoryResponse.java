@@ -11,12 +11,15 @@ public class ProfileCategoryResponse {
     private final Long id;
     private final String name;
 
-    public ProfileCategoryResponse(Long id, String name) {
+    private final boolean isFavorite;
+
+    public ProfileCategoryResponse(Long id, String name, boolean isFavorite) {
         this.id = id;
         this.name = name;
+        this.isFavorite = isFavorite;
     }
 
-    public static ProfileCategoryResponse of(Category category) {
-        return new ProfileCategoryResponse(category.getId(), category.getName());
+    public static ProfileCategoryResponse of(Category category, boolean isFavorite) {
+        return new ProfileCategoryResponse(category.getId(), category.getName(), isFavorite);
     }
 }
