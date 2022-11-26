@@ -17,7 +17,6 @@ artifacts:
     - application.jar
     - .platform
     - .ebextensions/**/*
-  discard-paths: yes
 
 cache:
   paths:
