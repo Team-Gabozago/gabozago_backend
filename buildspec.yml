@@ -6,6 +6,7 @@ phases:
       java: corretto11
   pre_build:
     commands:
+      - mkdir ./src/main/resources
       - touch ./src/main/resources/application.yml
   build:
     commands:
