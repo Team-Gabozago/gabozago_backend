@@ -20,7 +20,7 @@ public class ImageApiController {
 
     private final S3Service s3Service;
 
-    @PostMapping("/upload")
+    @PostMapping("/images")
     public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
 
         String url = s3Service.upload(multipartFile);
