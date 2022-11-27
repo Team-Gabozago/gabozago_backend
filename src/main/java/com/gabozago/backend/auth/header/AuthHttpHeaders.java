@@ -14,17 +14,6 @@ public class AuthHttpHeaders extends HttpHeaders {
     public void setAccessToken(String accessToken, HttpServletRequest request) {
         this.set(AUTHORIZATION, BEARER + accessToken);
         this.setContentType(MediaType.APPLICATION_JSON);
-
-        ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
-                .httpOnly(true)
-                .maxAge(60 * 60 * 2) // 2 hours
-                .secure(true)
-                .sameSite("None")
-                .domain(request.getServerName())
-                .path("/login")
-                .build();
-
-        this.add(HttpHeaders.SET_COOKIE, accessCookie.toString());
     }
 
     public void setRefreshToken(String refreshToken, HttpServletRequest request) {
@@ -33,8 +22,6 @@ public class AuthHttpHeaders extends HttpHeaders {
                 .maxAge(60 * 60 * 24 * 30) // 30 days
                 .secure(true)
                 .sameSite("None")
-                .domain(request.getServerName())
-                .path("/login")
                 .build();
 
         this.add(HttpHeaders.SET_COOKIE, refreshCookie.toString());
