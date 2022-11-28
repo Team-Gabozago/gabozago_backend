@@ -1,12 +1,11 @@
 package com.gabozago.backend.feed.domain;
 
-import com.gabozago.backend.entity.User;
 import com.gabozago.backend.feed.interfaces.dto.FeedRequest;
 import com.gabozago.backend.feed.interfaces.dto.FeedResponse;
 import com.gabozago.backend.feed.service.FeedService;
 
+import com.gabozago.backend.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

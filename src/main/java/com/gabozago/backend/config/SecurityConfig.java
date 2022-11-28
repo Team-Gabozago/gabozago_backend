@@ -1,8 +1,8 @@
 package com.gabozago.backend.config;
 
-import com.gabozago.backend.jwt.AuthFilter;
-import com.gabozago.backend.jwt.JwtAuthenticationEntryPoint;
-import com.gabozago.backend.jwt.TokenProvider;
+import com.gabozago.backend.auth.AuthFilter;
+import com.gabozago.backend.auth.JwtAuthenticationEntryPoint;
+import com.gabozago.backend.auth.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/auth/join", "/auth/login", "/auth/refresh").permitAll()
+                .antMatchers("/", "/ping", "/auth/join", "/auth/login", "/auth/refresh").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(new AuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 

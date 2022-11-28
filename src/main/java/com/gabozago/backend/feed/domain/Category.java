@@ -1,5 +1,6 @@
 package com.gabozago.backend.feed.domain;
 
+import com.gabozago.backend.user.domain.Favorite;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,8 +26,15 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private List<Feed> feeds = new ArrayList<>();
 
+    @OneToMany(mappedBy = "category")
+    private List<Favorite> users = new ArrayList<>();
+
     public Category(String name) {
         this.name = name;
+    }
+
+    public void addUser(Favorite favorite) {
+        users.add(favorite);
     }
 
     @Override
@@ -43,5 +51,4 @@ public class Category {
     public int hashCode() {
         return Objects.hash(id, name);
     }
-
 }

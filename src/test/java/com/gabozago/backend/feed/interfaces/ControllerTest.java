@@ -1,7 +1,7 @@
 package com.gabozago.backend.feed.interfaces;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;

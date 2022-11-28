@@ -1,7 +1,7 @@
 package com.gabozago.backend.feed.interfaces.dto;
 
 import com.gabozago.backend.feed.domain.Comment;
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 import lombok.Getter;
 
 import java.time.LocalDateTime;

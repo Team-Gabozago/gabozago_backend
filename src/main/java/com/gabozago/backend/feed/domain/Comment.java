@@ -3,7 +3,7 @@ package com.gabozago.backend.feed.domain;
 import com.gabozago.backend.AbstractEntity;
 import com.gabozago.backend.exception.ErrorCode;
 import com.gabozago.backend.exception.UnauthorizedException;
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

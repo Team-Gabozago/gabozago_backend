@@ -2,7 +2,7 @@ package com.gabozago.backend.feed.interfaces.dto;
 
 import com.gabozago.backend.feed.domain.Feed;
 import com.gabozago.backend.category.CategoryResponse;
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 import com.gabozago.backend.feed.domain.Location;
 import lombok.Getter;
 

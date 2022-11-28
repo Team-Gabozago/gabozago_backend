@@ -12,7 +12,7 @@ import com.gabozago.backend.common.exception.EntityNotFoundException;
 import com.gabozago.backend.common.exception.NotFoundException;
 import com.gabozago.backend.common.exception.UnauthorizedException;
 import com.gabozago.backend.common.response.ErrorCode;
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

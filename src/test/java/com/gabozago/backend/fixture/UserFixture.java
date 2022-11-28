@@ -1,6 +1,6 @@
 package com.gabozago.backend.fixture;
 
-import com.gabozago.backend.entity.User;
+import com.gabozago.backend.user.domain.User;
 
 public class UserFixture {
 
