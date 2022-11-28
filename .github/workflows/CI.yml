@@ -51,7 +51,7 @@ jobs:
         shell: bash
 
       - name: deliver application.yml
-        run: echo "${{secrets.APPLICATION}}" > ./src/main/resources/application.yml
+        run: echo "${{secrets.APPLICATION_NCP}}" > ./src/main/resources/application.yml
         shell: bash
 
       - name: Build with Gradle without test
