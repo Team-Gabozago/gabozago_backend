@@ -1,7 +1,8 @@
-package com.gabozago.backend.exception;
+package com.gabozago.backend.common.exception;
+
+import com.gabozago.backend.common.response.ErrorCode;
 
 public class NotFoundException extends BaseException {
-
 
     public NotFoundException() {
         super(ErrorCode.COMMON_INVALID_PARAMETER);

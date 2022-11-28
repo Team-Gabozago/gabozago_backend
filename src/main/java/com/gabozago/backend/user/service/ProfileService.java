@@ -1,6 +1,6 @@
 package com.gabozago.backend.user.service;
 
-import com.gabozago.backend.exception.ConflictException;
+import com.gabozago.backend.common.exception.ConflictException;
 import com.gabozago.backend.user.domain.User;
 import com.gabozago.backend.user.infrastructure.UserRepository;
 import com.gabozago.backend.user.interfaces.dto.ProfileUpdateRequest;

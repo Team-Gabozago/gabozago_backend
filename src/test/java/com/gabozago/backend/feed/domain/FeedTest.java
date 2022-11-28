@@ -1,9 +1,14 @@
 package com.gabozago.backend.feed.domain;
 
+import com.gabozago.backend.feed.interfaces.dto.FeedRequest;
+import com.gabozago.backend.feed.interfaces.dto.FeedResponse;
+import com.gabozago.backend.feed.service.FeedService;
+
 import com.gabozago.backend.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +21,16 @@ class FeedTest {
     private Feed feed;
 
     private User 봄봄_2 = 봄봄_생성();
+
+    // private FeedRequest FEED_REQUEST1 = new FeedRequest(1, "title1", "content1",
+    // 123.123, 456.456,
+    // new ArrayList<>());
+    // private FeedRequest FEED_REQUEST2 = new FeedRequest("title2", new
+    // ArrayList<>(), "content2", "PROGRESS", true,
+    // "www.github.com/woowacourse", "www.github.com/woowacourse", null);
+    // private FeedRequest FEED_REQUEST3 = new FeedRequest("title3", new
+    // ArrayList<>(), "content3", "PROGRESS", true,
+    // "www.github.com/woowacourse", "www.github.com/woowacourse", null);
 
     @BeforeEach
     void setUp() {
@@ -38,6 +53,30 @@ class FeedTest {
         // then
         assertThat(feed.getAuthor()).isEqualTo(봄봄_2);
     }
+
+    // @DisplayName("Feed를 수정한다. (storageUrl, deployUrl, thumbnailUrl을 제외한 나머지만
+    // 수정)")
+    // @Test
+    // void updateNewTechs() {
+    // // given
+    // Long feedId1 = FeedService.create(봄봄_2, FEED_REQUEST1);
+    // FeedRequest request = new FeedRequest(
+    // 1,
+    // "수정된 제목",
+    // "수정된 내용",
+    // 12.345,
+    // 45.2233,
+    // Collections.emptyList());
+
+    // // when
+    // FeedService.update(봄봄_2, feedId1, request);
+    // em.flush();
+    // em.clear();
+
+    // // then
+    // FeedResponse updateFeed = FeedService.findById(봄봄_2, feedId1);
+    // 피드_정보가_같은지_조회(request, updateFeed);
+    // }
 
     @Test
     void sortByCommentAndReplies() {

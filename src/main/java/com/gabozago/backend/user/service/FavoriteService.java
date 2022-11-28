@@ -1,8 +1,8 @@
 package com.gabozago.backend.user.service;
 
-import com.gabozago.backend.exception.ConflictException;
-import com.gabozago.backend.exception.EntityNotFoundException;
-import com.gabozago.backend.exception.ErrorCode;
+import com.gabozago.backend.common.exception.ConflictException;
+import com.gabozago.backend.common.exception.EntityNotFoundException;
+import com.gabozago.backend.common.response.ErrorCode;
 import com.gabozago.backend.feed.domain.Category;
 import com.gabozago.backend.feed.infrastructure.CategoryRepository;
 import com.gabozago.backend.user.domain.User;
@@ -41,12 +41,14 @@ public class FavoriteService {
     }
 
     public Category findCategoryById(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(() -> new EntityNotFoundException(ErrorCode.CATEGORY_NOT_EXISTS));
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CATEGORY_NOT_EXISTS));
     }
 
     public void deleteFavorite(User user, Long categoryId) {
         Category category = findCategoryById(categoryId);
-        Favorite favorite = (Favorite) favoriteRepository.findByUserIdAndCategoryId(user.getId(), category.getId()).orElseThrow(() -> new EntityNotFoundException(ErrorCode.CATEGORY_NOT_EXISTS));
+        Favorite favorite = (Favorite) favoriteRepository.findByUserIdAndCategoryId(user.getId(), category.getId())
+                .orElseThrow(() -> new EntityNotFoundException(ErrorCode.CATEGORY_NOT_EXISTS));
         favoriteRepository.delete(favorite);
     }
 }

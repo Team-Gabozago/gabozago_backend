@@ -1,4 +1,4 @@
-package com.gabozago.backend.exception;
+package com.gabozago.backend.common.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
