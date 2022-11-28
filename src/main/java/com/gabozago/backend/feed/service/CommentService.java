@@ -1,7 +1,7 @@
 package com.gabozago.backend.feed.service;
 
-import com.gabozago.backend.exception.ErrorCode;
-import com.gabozago.backend.exception.NotFoundException;
+import com.gabozago.backend.common.exception.NotFoundException;
+import com.gabozago.backend.common.response.ErrorCode;
 import com.gabozago.backend.feed.domain.Comment;
 import com.gabozago.backend.feed.domain.Feed;
 import com.gabozago.backend.feed.infrastructure.CommentRepository;
