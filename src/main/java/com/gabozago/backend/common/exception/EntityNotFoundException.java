@@ -1,4 +1,6 @@
-package com.gabozago.backend.exception;
+package com.gabozago.backend.common.exception;
+
+import com.gabozago.backend.common.response.ErrorCode;
 
 public class EntityNotFoundException extends BaseException {
 
@@ -13,6 +15,5 @@ public class EntityNotFoundException extends BaseException {
     public EntityNotFoundException(ErrorCode errorCode) {
         super(errorCode);
     }
-
 
 }

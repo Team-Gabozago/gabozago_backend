@@ -1,6 +1,5 @@
 package com.gabozago.backend.feed.interfaces.dto;
 
-import com.gabozago.backend.entity.User;
 import com.gabozago.backend.feed.domain.Category;
 import com.gabozago.backend.feed.domain.Feed;
 import com.gabozago.backend.feed.domain.Location;
@@ -46,13 +45,12 @@ public class FeedRequest {
         this.images = images;
     }
 
-    public Feed toEntity(User user, Category category) {
+    public Feed toEntity(Category category) {
         return Feed.builder()
                 .category(category)
                 .title(this.title)
                 .content(this.content)
                 .location(new Location(this.longitude, this.latitude))
-                .author(user)
                 .build();
     }
 }

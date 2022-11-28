@@ -1,8 +1,8 @@
 package com.gabozago.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gabozago.backend.exception.ErrorCode;
-import com.gabozago.backend.exception.UnauthorizedException;
+import com.gabozago.backend.common.exception.UnauthorizedException;
+import com.gabozago.backend.common.response.ErrorCode;
 import com.gabozago.backend.feed.domain.Comment;
 import com.gabozago.backend.feed.domain.Feed;
 import com.gabozago.backend.feed.domain.Like;
@@ -54,63 +54,20 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<RefreshToken> refreshTokens;
+
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Feed> feeds = new ArrayList<>();
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Like> likes = new ArrayList<>();
 
-    public boolean sameAs(User user) {
-        return this.equals(user);
-    }
-
-    public void addFeed(Feed feed) {
-        this.feeds.add(feed);
-    }
-
-    public Feed findMyFeed(Long feedId) {
-        return this.feeds.stream()
-                .filter(feed -> feedId.equals(feed.getId()))
-                .findAny().orElseThrow(() -> new UnauthorizedException(ErrorCode.UNAUTHORIZED_UPDATE_FEED));
-    }
-
-    public void addComment(Comment comment) {
-        this.comments.add(comment);
-    }
-
-    public void deleteComment(Comment comment) {
-        this.comments.remove(comment);
-    }
-
-    public boolean isLiked(Feed feed) {
-        return likes.stream()
-                .anyMatch(like -> like.hasFeed(feed));
-    }
-
-    public void addLike(Like like) {
-        this.likes.add(like);
-        like.getFeed().addLike(like);
-    }
-
-    public void delete(Like like) {
-        this.likes.remove(like);
-    }
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<RefreshToken> refreshTokens;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<Comment> comments = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -148,6 +105,49 @@ public class User implements UserDetails {
 
     public String getNickName() {
         return this.nickname;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    public boolean sameAs(User user) {
+        return this.equals(user);
+    }
+
+    public void addFeed(Feed feed) {
+        this.feeds.add(feed);
+    }
+
+    public Feed findMyFeed(Long feedId) {
+        return this.feeds.stream()
+                .filter(feed -> feedId.equals(feed.getId()))
+                .findAny().orElseThrow(() -> new UnauthorizedException(ErrorCode.UNAUTHORIZED_UPDATE_FEED));
+    }
+
+    public boolean isLiked(Feed feed) {
+        return this.likes.stream()
+                .anyMatch(like -> like.hasFeed(feed));
+    }
+
+    public void addLike(Like like) {
+        this.likes.add(like);
+        like.getFeed().addLike(like);
+    }
+
+    public void delete(Like like) {
+        this.likes.remove(like);
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
+    public void deleteComment(Comment comment) {
+        this.comments.remove(comment);
     }
 
     @Override

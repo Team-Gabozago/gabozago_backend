@@ -47,21 +47,18 @@ public class Feed extends AbstractEntity {
     @OneToMany(mappedBy = "feed")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "feed")
+    @OneToMany(mappedBy = "feed", cascade = CascadeType.ALL)
     private List<Like> likes = new ArrayList<>();
 
-    private int views;
-
     @Builder
-    public Feed(Long id, User author, Category category,
-            String title, String content, Location location, int views) {
+    public Feed(Long id, Category category,
+            String title, String content, Location location, User author) {
         this.id = id;
-        this.author = author;
         this.category = category;
         this.title = title;
         this.content = content;
         this.location = location;
-        this.views = views;
+        this.author = author;
         this.images = new ArrayList<>();
         this.likes = new ArrayList<>();
         this.comments = new ArrayList<>();
@@ -118,6 +115,10 @@ public class Feed extends AbstractEntity {
                 .findAny();
     }
 
+    public void delete(Like like) {
+        this.likes.remove(like);
+    }
+
     public Map<Comment, List<Comment>> mapByCommentAndReplies() {
         Map<Comment, List<Comment>> commentAndReplies = new HashMap<>();
 
@@ -127,13 +128,6 @@ public class Feed extends AbstractEntity {
             }
         }
         return commentAndReplies;
-    }
-
-    public void increaseView(boolean alreadyView) {
-        if (alreadyView) {
-            return;
-        }
-        this.views++;
     }
 
     @Override
