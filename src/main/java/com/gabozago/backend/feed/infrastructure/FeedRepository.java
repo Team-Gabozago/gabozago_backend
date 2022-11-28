@@ -15,7 +15,7 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
             "from Feed as feed " +
             "join fetch feed.author " +
             "where feed.id <= :feedId " +
-            "order by feed.createdDate desc, feed.id desc")
+            "order by feed.createdAt desc, feed.id desc")
     List<Feed> findAllFeed(@Param("feedId") Long feedId, Pageable pageable);
 
 }
