@@ -1,8 +1,8 @@
 package com.gabozago.backend.feed.domain;
 
 import com.gabozago.backend.AbstractEntity;
-import com.gabozago.backend.exception.ErrorCode;
-import com.gabozago.backend.exception.UnauthorizedException;
+import com.gabozago.backend.common.exception.UnauthorizedException;
+import com.gabozago.backend.common.response.ErrorCode;
 import com.gabozago.backend.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends AbstractEntity {
 
@@ -58,10 +59,10 @@ public class Comment extends AbstractEntity {
         this.content = content;
     }
 
-//    public void addReply(Comment reply) {
-//        this.child.add(reply);
-//        reply.parent = this;
-//    }
+    // public void addReply(Comment reply) {
+    // this.child.add(reply);
+    // reply.parent = this;
+    // }
 
     public Comment writtenBy(User user, Feed feed) {
         this.author = user;
