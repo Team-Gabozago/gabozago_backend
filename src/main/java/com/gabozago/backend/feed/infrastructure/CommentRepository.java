@@ -1,6 +1,7 @@
 package com.gabozago.backend.feed.infrastructure;
 
 import com.gabozago.backend.feed.domain.Comment;
+import com.gabozago.backend.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,4 +25,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "where com.feed.id = :feedId and com.parent.id = :parentCommentId " +
             "order by com.id desc")
     List<Comment> findAllByFeedIdAndParentCommentId(@Param("feedId") Long feedId, @Param("parentCommentId") Long parentCommentId);
+
+    List<Comment> findAllCommentsByAuthor(User user);
 }

@@ -1,8 +1,7 @@
 package com.gabozago.backend.user.interfaces;
 
 import com.gabozago.backend.user.domain.User;
-import com.gabozago.backend.user.interfaces.dto.ProfileResponse;
-import com.gabozago.backend.user.interfaces.dto.ProfileUpdateRequest;
+import com.gabozago.backend.user.interfaces.dto.*;
 import com.gabozago.backend.user.service.FileStorageService;
 
 import com.gabozago.backend.user.service.FavoriteService;
@@ -82,5 +81,23 @@ public class ProfileController {
         profileService.leave(user);
 
         return ResponseEntity.ok("{\"message\": \"user deleted.\"}");
+    }
+
+    @GetMapping(value = "/feeds", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProfileFeedsResponse> feeds(@AuthenticationPrincipal User user)
+    {
+        return ResponseEntity.ok(profileService.getFeedsByUser(user));
+    }
+
+    @GetMapping(value = "/comments", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProfileCommentsResponse> comments(@AuthenticationPrincipal User user)
+    {
+        return ResponseEntity.ok(profileService.getCommentsByUser(user));
+    }
+
+    @GetMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProfileLikesResponse> favorites(@AuthenticationPrincipal User user)
+    {
+        return ResponseEntity.ok(profileService.getLikesByUser(user));
     }
 }
