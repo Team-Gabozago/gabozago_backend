@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.servlet.http.Cookie;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,13 +48,59 @@ public class AuthControllerTests {
     private PasswordEncoder passwordEncoder;
 
     @Test
+    @DisplayName("이메일 유무 체크")
+    void testEmailExists() throws Exception {
+        mockMvc.perform(get("/auth/email-exists")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("*/*")
+                        .content("{\"email\": \"test@example.com\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("이메일 유무 체크 - 같은 이메일이 있는 경우")
+    void testEmailExists_같은_이메일이_있는_경우() throws Exception {
+        Mockito.when(userService.checkExistsByEmail("test@example.com"))
+                .thenReturn(true);
+
+        mockMvc.perform(get("/auth/email-exists")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("*/*")
+                        .content("{\"email\": \"test@example.com\"}"))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @DisplayName("닉네임 유무 체크")
+    void testNicknameExists() throws Exception {
+        mockMvc.perform(get("/auth/nickname-exists")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("*/*")
+                        .content("{\"nickname\": \"kwanok\"}"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("닉네임 유무 체크 - 같은 닉네임이 있는 경우 실패")
+    void testNicknameExists_같은_닉네임이_있는_경우() throws Exception {
+        Mockito.when(userService.checkExistsByNickname("test"))
+                .thenReturn(true);
+
+        mockMvc.perform(get("/auth/nickname-exists")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept("*/*")
+                        .content("{\"nickname\": \"test\"}"))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
     @DisplayName("회원가입 성공")
     void testJoin() throws Exception {
         mockMvc.perform(post("/auth/join")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept("*/*")
                         .content("{\"email\": \"test@example.com\", \"password\": \"password\", \"nickname\": \"test\"}"))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -184,8 +231,7 @@ public class AuthControllerTests {
 
                     header().string("Authorization", "Bearer accessToken").match(result);
 
-                    System.out.println("AccessToken: " + result.getResponse().getHeaders("Set-Cookie").get(0));
-                    System.out.println("RefreshToken: " + result.getResponse().getHeaders("Set-Cookie").get(1));
+                    System.out.println("RefreshToken: " + result.getResponse().getHeaders("Set-Cookie").get(0));
                 });
     }
 
