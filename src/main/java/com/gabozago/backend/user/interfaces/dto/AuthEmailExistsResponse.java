@@ -5,10 +5,16 @@ import lombok.Getter;
 @Getter
 public class AuthEmailExistsResponse {
     private final boolean exists;
+    private final String code;
     private final String message;
 
     public AuthEmailExistsResponse(boolean exists, String message) {
         this.exists = exists;
+        if (exists) {
+            this.code = "EMAIL_EXISTS";
+        } else {
+            this.code = "AVAILABLE_EMAIL";
+        }
         this.message = message;
     }
 

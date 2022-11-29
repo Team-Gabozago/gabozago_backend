@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProfileResponse {
+    private final String message;
+    private final String code;
     private final Long id;
     private final String email;
     private final String nickname;
@@ -20,6 +22,8 @@ public class ProfileResponse {
     private final List<ProfileCategoryResponse> categories;
 
     public ProfileResponse(Long id, String email, String nickname, String profileImage, List<ProfileCategoryResponse> categories) {
+        this.message = "프로필 정보를 가져왔습니다.";
+        this.code = "PROFILE_FETCHED";
         this.id = id;
         this.email = email;
         this.nickname = nickname;

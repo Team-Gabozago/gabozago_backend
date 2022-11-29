@@ -5,10 +5,16 @@ import lombok.Getter;
 @Getter
 public class AuthNicknameExistsResponse {
     private final boolean exists;
+    private final String code;
     private final String message;
 
     public AuthNicknameExistsResponse(boolean exists, String message) {
         this.exists = exists;
+        if (exists) {
+            this.code = "NICKNAME_EXISTS";
+        } else {
+            this.code = "AVAILABLE_NICKNAME";
+        }
         this.message = message;
     }
 
