@@ -144,4 +144,8 @@ public class Feed extends AbstractEntity {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public boolean isAuthor(User user) {
+        return this.author.sameAs(user);
+    }
 }
