@@ -38,6 +38,24 @@ public class AuthController {
         return ResponseEntity.ok("this is auth controller");
     }
 
+    @PostMapping("/email-exists")
+    public ResponseEntity<AuthEmailExistsResponse> emailExists(@Valid @RequestBody AuthEmailExistsRequest user) {
+        if (userService.checkExistsByEmail(user.getEmail())) {
+            return new ResponseEntity<>(AuthEmailExistsResponse.of(true), HttpStatus.CONFLICT);
+        }
+
+        return new ResponseEntity<>(AuthEmailExistsResponse.of(false), HttpStatus.OK);
+    }
+
+    @PostMapping("/nickname-exists")
+    public ResponseEntity<AuthNicknameExistsResponse> nicknameExists(@Valid @RequestBody AuthNicknameExistsRequest user) {
+        if (userService.checkExistsByNickname(user.getNickname())) {
+            return new ResponseEntity<>(AuthNicknameExistsResponse.of(true), HttpStatus.CONFLICT);
+        }
+
+        return new ResponseEntity<>(AuthNicknameExistsResponse.of(false), HttpStatus.OK);
+    }
+
     @PostMapping(path = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> join(final @Valid @RequestBody JoinRequestDto user) {
@@ -111,7 +129,7 @@ public class AuthController {
         return ResponseEntity.ok("{\"message\": \"auth success\"}");
     }
 
-    @GetMapping(value = "/check-password", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/check-password", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthCheckPasswordResponse> checkPassword(@AuthenticationPrincipal User user, final @Valid @RequestBody AuthCheckPasswordRequest request) {
         boolean isOk = passwordEncoder.matches(request.getPassword(), user.getPassword());
 

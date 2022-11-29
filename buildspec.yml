@@ -4,6 +4,10 @@ phases:
   install:
     runtime-versions:
       java: corretto11
+  pre_build:
+    commands:
+      - touch ./src/main/resources/application.properties
+      - echo "spring.jpa.properties.hibernate.enable_lazy_load_no_trans=true" > ./src/main/resources/application.properties
   build:
     commands:
       - echo Build Starting on `date`
