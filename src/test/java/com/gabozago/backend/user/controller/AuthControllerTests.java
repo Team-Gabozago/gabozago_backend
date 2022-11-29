@@ -50,7 +50,7 @@ public class AuthControllerTests {
     @Test
     @DisplayName("이메일 유무 체크")
     void testEmailExists() throws Exception {
-        mockMvc.perform(get("/auth/email-exists")
+        mockMvc.perform(post("/auth/email-exists")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept("*/*")
                         .content("{\"email\": \"test@example.com\"}"))
@@ -63,7 +63,7 @@ public class AuthControllerTests {
         Mockito.when(userService.checkExistsByEmail("test@example.com"))
                 .thenReturn(true);
 
-        mockMvc.perform(get("/auth/email-exists")
+        mockMvc.perform(post("/auth/email-exists")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept("*/*")
                         .content("{\"email\": \"test@example.com\"}"))
@@ -73,7 +73,7 @@ public class AuthControllerTests {
     @Test
     @DisplayName("닉네임 유무 체크")
     void testNicknameExists() throws Exception {
-        mockMvc.perform(get("/auth/nickname-exists")
+        mockMvc.perform(post("/auth/nickname-exists")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept("*/*")
                         .content("{\"nickname\": \"kwanok\"}"))
@@ -86,7 +86,7 @@ public class AuthControllerTests {
         Mockito.when(userService.checkExistsByNickname("test"))
                 .thenReturn(true);
 
-        mockMvc.perform(get("/auth/nickname-exists")
+        mockMvc.perform(post("/auth/nickname-exists")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept("*/*")
                         .content("{\"nickname\": \"test\"}"))
