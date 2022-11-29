@@ -13,7 +13,11 @@ public class AuthCheckPasswordResponse {
 
     public AuthCheckPasswordResponse(String message, boolean isCorrect) {
         this.message = message;
-        this.code = "PASSWORD_CHECKED";
+        if (isCorrect) {
+            this.code = "PASSWORD_CORRECT";
+        } else {
+            this.code = "PASSWORD_INCORRECT";
+        }
         this.isCorrect = isCorrect;
     }
 
