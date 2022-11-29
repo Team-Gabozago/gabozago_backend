@@ -2,9 +2,7 @@ package com.gabozago.backend.user.interfaces;
 
 import com.gabozago.backend.common.exception.ImageNotSavedException;
 import com.gabozago.backend.user.domain.User;
-import com.gabozago.backend.user.interfaces.dto.ProfileImageUploadResponse;
-import com.gabozago.backend.user.interfaces.dto.ProfileResponse;
-import com.gabozago.backend.user.interfaces.dto.ProfileUpdateRequest;
+import com.gabozago.backend.user.interfaces.dto.*;
 import com.gabozago.backend.user.service.FileStorageService;
 
 import com.gabozago.backend.user.service.FavoriteService;
