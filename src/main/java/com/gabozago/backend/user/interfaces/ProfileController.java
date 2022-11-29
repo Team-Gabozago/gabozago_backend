@@ -1,6 +1,8 @@
 package com.gabozago.backend.user.interfaces;
 
+import com.gabozago.backend.common.exception.ImageNotSavedException;
 import com.gabozago.backend.user.domain.User;
+import com.gabozago.backend.user.interfaces.dto.ProfileImageUploadResponse;
 import com.gabozago.backend.user.interfaces.dto.ProfileResponse;
 import com.gabozago.backend.user.interfaces.dto.ProfileUpdateRequest;
 import com.gabozago.backend.user.service.FileStorageService;
@@ -45,13 +47,14 @@ public class ProfileController {
     }
 
     @PostMapping(value = "/images", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> uploadProfileImage(@AuthenticationPrincipal User user, @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<ProfileImageUploadResponse> uploadProfileImage(@AuthenticationPrincipal User user, @RequestParam("image") MultipartFile image) {
         try {
             storageService.save(image, user);
-            return ResponseEntity.ok("{\"message\": \"File uploaded successfully\"}");
+            return ResponseEntity.ok(
+                    ProfileImageUploadResponse.of(user.getProfileImage())
+            );
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().body("File upload failed");
+            throw new ImageNotSavedException(e.getMessage());
         }
     }
 
