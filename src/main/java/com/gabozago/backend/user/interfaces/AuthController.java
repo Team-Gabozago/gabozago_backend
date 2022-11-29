@@ -1,8 +1,6 @@
 package com.gabozago.backend.user.interfaces;
 
-import com.gabozago.backend.user.interfaces.dto.AuthChangePasswordRequest;
-import com.gabozago.backend.user.interfaces.dto.AuthCheckPasswordRequest;
-import com.gabozago.backend.user.interfaces.dto.AuthCheckPasswordResponse;
+import com.gabozago.backend.user.interfaces.dto.*;
 import com.gabozago.backend.user.interfaces.dto.auth.JoinRequestDto;
 import com.gabozago.backend.user.interfaces.dto.auth.LoginRequestDto;
 import com.gabozago.backend.user.domain.RefreshToken;
@@ -39,6 +37,24 @@ public class AuthController {
         return ResponseEntity.ok("this is auth controller");
     }
 
+    @GetMapping("/email-exists")
+    public ResponseEntity<AuthEmailExistsResponse> emailExists(@Valid @RequestBody AuthEmailExistsRequest user) {
+        if (userService.checkExistsByEmail(user.getEmail())) {
+            return new ResponseEntity<>(AuthEmailExistsResponse.of(true), HttpStatus.CONFLICT);
+        }
+
+        return new ResponseEntity<>(AuthEmailExistsResponse.of(false), HttpStatus.OK);
+    }
+
+    @GetMapping("/nickname-exists")
+    public ResponseEntity<AuthNicknameExistsResponse> nicknameExists(@Valid @RequestBody AuthNicknameExistsRequest user) {
+        if (userService.checkExistsByNickname(user.getNickname())) {
+            return new ResponseEntity<>(AuthNicknameExistsResponse.of(true), HttpStatus.CONFLICT);
+        }
+
+        return new ResponseEntity<>(AuthNicknameExistsResponse.of(false), HttpStatus.OK);
+    }
+
     @PostMapping(path = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> join(final @Valid @RequestBody JoinRequestDto user) {
@@ -57,7 +73,7 @@ public class AuthController {
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
 
-        return new ResponseEntity<>("{\"message\": \"login success\"}", HttpStatus.OK);
+        return new ResponseEntity<>("{\"message\": \"join success\"}", HttpStatus.CREATED);
     }
 
     @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
