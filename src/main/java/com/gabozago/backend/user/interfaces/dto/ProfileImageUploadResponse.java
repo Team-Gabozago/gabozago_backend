@@ -9,9 +9,9 @@ import lombok.Getter;
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProfileImageUploadResponse {
-    private String message;
-    private String code;
-    private String imageUrl;
+    private final String message;
+    private final String code;
+    private final String imageUrl;
 
     public ProfileImageUploadResponse(String message, String code, String url) {
         this.message = message;
@@ -23,6 +23,6 @@ public class ProfileImageUploadResponse {
         return new ProfileImageUploadResponse(
                 "이미지가 업로드되었습니다.",
                 "IMAGE_UPLOADED",
-                "https://api.wonto.site/profile/images/" + profileImage.getFileName());
+                "https://wontu-images.s3.ap-northeast-2.amazonaws.com" + profileImage.getPath());
     }
 }

@@ -1,14 +1,15 @@
 package com.gabozago.backend.user.interfaces;
 
 import com.gabozago.backend.common.exception.ImageNotSavedException;
+import com.gabozago.backend.image.service.S3Service;
+import com.gabozago.backend.user.domain.ProfileImage;
 import com.gabozago.backend.user.domain.User;
 import com.gabozago.backend.user.interfaces.dto.*;
-import com.gabozago.backend.user.service.FileStorageService;
 
 import com.gabozago.backend.user.service.FavoriteService;
 import com.gabozago.backend.user.service.ProfileService;
+import com.gabozago.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,17 +17,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/profile")
 @RequiredArgsConstructor
 public class ProfileController {
-    private final FileStorageService storageService;
-
     private final FavoriteService favoriteService;
 
     private final ProfileService profileService;
+
+    private final S3Service s3Service;
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProfileResponse> getProfile(@AuthenticationPrincipal User user) {
@@ -47,22 +47,12 @@ public class ProfileController {
     @PostMapping(value = "/images", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProfileImageUploadResponse> uploadProfileImage(@AuthenticationPrincipal User user, @RequestParam("image") MultipartFile image) {
         try {
-            storageService.save(image, user);
-            return ResponseEntity.ok(
-                    ProfileImageUploadResponse.of(user.getProfileImage())
-            );
+            ProfileImage profileImage = s3Service.uploadProfileImage(image, user);
+
+            return ResponseEntity.ok(profileService.saveProfileImage(profileImage, user));
         } catch (Exception e) {
             throw new ImageNotSavedException(e.getMessage());
         }
-    }
-
-    @GetMapping(value = "/images/{filename}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<Resource> getProfileImage(@AuthenticationPrincipal User user, @PathVariable String filename) {
-        if (user.getProfileImage() == null && Objects.equals(user.getProfileImage().getFileName(), filename)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(storageService.load(filename));
     }
 
     @PatchMapping(value = "/favorites/{categoryId:[\\d]+}", produces = MediaType.APPLICATION_JSON_VALUE)

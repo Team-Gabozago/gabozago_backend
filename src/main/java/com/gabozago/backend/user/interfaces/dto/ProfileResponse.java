@@ -34,7 +34,7 @@ public class ProfileResponse {
     public static ProfileResponse of(User user, List<Favorite> categories, List<Category> allCategories) {
         String profileImage = null;
         if (user.getProfileImage() != null) {
-            profileImage = "http://localhost:8080/profile/images/" + user.getProfileImage().getFileName();
+            profileImage = "https://wontu-images.s3.ap-northeast-2.amazonaws.com" + user.getProfileImage().getPath();
         }
 
         List<ProfileCategoryResponse> favoriteCategories = allCategories.stream()
