@@ -1,6 +1,8 @@
 package com.gabozago.backend.feed.infrastructure;
 
 import com.gabozago.backend.feed.domain.Feed;
+import com.gabozago.backend.feed.domain.Like;
+import com.gabozago.backend.user.domain.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
