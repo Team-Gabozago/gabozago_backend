@@ -14,15 +14,16 @@ public class CommentResponse {
     private final String content;
     private final boolean feedAuthor;
     private final LocalDateTime createdAt;
-    private final boolean modified;
+
+//    private final boolean modified;
     private final AuthorResponse author;
 
-    public CommentResponse(Long id, String content, boolean feedAuthor, LocalDateTime createdAt, boolean modified, AuthorResponse author) {
+    public CommentResponse(Long id, String content, boolean feedAuthor, LocalDateTime createdAt, AuthorResponse author) {
         this.id = id;
         this.content = content;
         this.feedAuthor = feedAuthor;
         this.createdAt = createdAt;
-        this.modified = modified;
+//        this.modified = modified;
         this.author = author;
     }
 
@@ -32,7 +33,7 @@ public class CommentResponse {
                 comment.getContent(),
                 comment.isFeedAuthor(),
                 comment.getCreatedAt(),
-                comment.isModified(),
+//                comment.isModified(),
                 AuthorResponse.of(comment.getAuthor())
         );
     }
