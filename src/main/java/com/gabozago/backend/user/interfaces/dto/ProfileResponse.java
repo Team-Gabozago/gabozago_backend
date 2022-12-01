@@ -35,6 +35,8 @@ public class ProfileResponse {
         String profileImage = null;
         if (user.getProfileImage() != null) {
             profileImage = "https://wontu-images.s3.ap-northeast-2.amazonaws.com" + user.getProfileImage().getPath();
+        } else {
+            profileImage = "https://res.cloudinary.com/dseikbqa7/image/upload/v1668526362/wontu/gopher_a3mcbl.png";
         }
 
         List<ProfileCategoryResponse> favoriteCategories = allCategories.stream()
