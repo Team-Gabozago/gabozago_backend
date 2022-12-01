@@ -54,7 +54,7 @@
         <td>
             <img width=156 src="https://user-images.githubusercontent.com/61671343/204853968-2f765023-62e4-4b2c-844e-b01206aad772.jpeg">
             <br>
-            <a href="https://github.com/Eunji0627"><I>Eunji0627</I></a>
+            <a href="https://github.com/KATEKEITH"><I>KATEKEITH</I></a>
         </td>
         <td>
             <img width=156 src="https://user-images.githubusercontent.com/61671343/204853877-60f8da69-0361-438c-9030-92c0afa5b355.jpeg">
