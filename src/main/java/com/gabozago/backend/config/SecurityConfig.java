@@ -20,6 +20,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+    private final String[] WHITE_LIST = new String[]{"/",
+            "/ping",
+            "/auth/join",
+            "/auth/login",
+            "/auth/refresh",
+            "/auth/email-exists",
+            "/auth/nickname-exists"
+    };
+
     private final TokenProvider tokenProvider;
 
     private final AccessDeniedHandler accessDeniedHandler;
@@ -44,7 +53,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/", "/ping", "/auth/join", "/auth/login", "/auth/refresh").permitAll()
+                .antMatchers(WHITE_LIST).permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(new AuthFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class);
 

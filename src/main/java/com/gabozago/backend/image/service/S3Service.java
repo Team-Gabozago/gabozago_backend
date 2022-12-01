@@ -2,6 +2,8 @@ package com.gabozago.backend.image.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.gabozago.backend.user.domain.ProfileImage;
+import com.gabozago.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -35,6 +38,27 @@ public class S3Service {
         } catch (Exception e){
             log.error(e.getMessage());
             return e.getMessage();
+        }
+    }
+
+    public ProfileImage uploadProfileImage(MultipartFile multipartFile, User user) {
+        try {
+            String extension = Objects.requireNonNull(multipartFile.getOriginalFilename()).split("\\.")[1];
+            String s3FilePath = "uploads/user/profiles/" + user.getId() + "/" + UUID.randomUUID() + "." + extension;
+
+            ObjectMetadata objMeta = new ObjectMetadata();
+            objMeta.setContentLength(multipartFile.getInputStream().available());
+
+            amazonS3.putObject(bucket, s3FilePath, multipartFile.getInputStream(), objMeta);
+
+            return ProfileImage.builder()
+                    .fileName(UUID.randomUUID() + "." + extension)
+                    .size(multipartFile.getSize())
+                    .contentType(multipartFile.getContentType())
+                    .path("/" + s3FilePath)
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

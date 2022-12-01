@@ -1,8 +1,6 @@
 package com.gabozago.backend.user.interfaces;
 
-import com.gabozago.backend.user.interfaces.dto.AuthChangePasswordRequest;
-import com.gabozago.backend.user.interfaces.dto.AuthCheckPasswordRequest;
-import com.gabozago.backend.user.interfaces.dto.AuthCheckPasswordResponse;
+import com.gabozago.backend.user.interfaces.dto.*;
 import com.gabozago.backend.user.interfaces.dto.auth.JoinRequestDto;
 import com.gabozago.backend.user.interfaces.dto.auth.LoginRequestDto;
 import com.gabozago.backend.user.domain.RefreshToken;
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/auth")
@@ -39,9 +38,27 @@ public class AuthController {
         return ResponseEntity.ok("this is auth controller");
     }
 
+    @PostMapping("/email-exists")
+    public ResponseEntity<AuthEmailExistsResponse> emailExists(@Valid @RequestBody AuthEmailExistsRequest user) {
+        if (userService.checkExistsByEmail(user.getEmail())) {
+            return new ResponseEntity<>(AuthEmailExistsResponse.of(true), HttpStatus.CONFLICT);
+        }
+
+        return new ResponseEntity<>(AuthEmailExistsResponse.of(false), HttpStatus.OK);
+    }
+
+    @PostMapping("/nickname-exists")
+    public ResponseEntity<AuthNicknameExistsResponse> nicknameExists(@Valid @RequestBody AuthNicknameExistsRequest user) {
+        if (userService.checkExistsByNickname(user.getNickname())) {
+            return new ResponseEntity<>(AuthNicknameExistsResponse.of(true), HttpStatus.CONFLICT);
+        }
+
+        return new ResponseEntity<>(AuthNicknameExistsResponse.of(false), HttpStatus.OK);
+    }
+
     @PostMapping(path = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<String> join(final @Valid @RequestBody JoinRequestDto user) {
+    public ResponseEntity<Object> join(final @Valid @RequestBody JoinRequestDto user) {
         if (userService.checkExistsByEmail(user.getEmail())) {
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.DUPLICATED_EMAIL).parseJson(), HttpStatus.CONFLICT);
         }
@@ -57,11 +74,11 @@ public class AuthController {
                 .roles(Collections.singletonList("ROLE_USER"))
                 .build());
 
-        return new ResponseEntity<>("{\"message\": \"login success\"}", HttpStatus.OK);
+        return ResponseEntity.ok(AuthJoinResponse.of("회원가입이 완료되었습니다."));
     }
 
     @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> login(final @Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
+    public ResponseEntity<Object> login(final @Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
         String email = loginRequestDto.getEmail();
         User user;
 
@@ -85,11 +102,11 @@ public class AuthController {
         headers.setAccessToken(accessToken, request);
         headers.setRefreshToken(refreshToken.getToken(), request);
 
-        return new ResponseEntity<>("{\"message\": \"login success\"}", headers, HttpStatus.OK);
+        return new ResponseEntity<>(AuthLoginResponse.of("로그인에 성공하였습니다."), headers, HttpStatus.OK);
     }
 
     @PostMapping(path = "/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> refresh(@CookieValue("refreshToken") String refreshToken, HttpServletRequest request) {
+    public ResponseEntity<Object> refresh(@CookieValue("refreshToken") String refreshToken, HttpServletRequest request) {
         RefreshToken token;
 
         try {
@@ -104,7 +121,7 @@ public class AuthController {
 
         headers.setAccessToken(accessToken, request);
 
-        return new ResponseEntity<>("{\"message\": \"refresh success\"}", headers, HttpStatus.OK);
+        return new ResponseEntity<>(AuthRefreshResponse.of("토큰이 갱신되었습니다."), headers, HttpStatus.OK);
     }
 
     @GetMapping(value = "/needAuth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -112,7 +129,7 @@ public class AuthController {
         return ResponseEntity.ok("{\"message\": \"auth success\"}");
     }
 
-    @GetMapping(value = "/check-password", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/check-password", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AuthCheckPasswordResponse> checkPassword(@AuthenticationPrincipal User user, final @Valid @RequestBody AuthCheckPasswordRequest request) {
         boolean isOk = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
@@ -125,7 +142,7 @@ public class AuthController {
     }
 
     @PatchMapping(value = "/password", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> changePassword(@AuthenticationPrincipal User user, final @Valid @RequestBody AuthChangePasswordRequest request) {
+    public ResponseEntity<Object> changePassword(@AuthenticationPrincipal User user, final @Valid @RequestBody AuthChangePasswordRequest request) {
         boolean isOk = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if (!isOk) {
@@ -135,6 +152,6 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userService.save(user);
 
-        return ResponseEntity.ok("{\"message\": \"password changed.\"}");
+        return ResponseEntity.ok(AuthChangePasswordResponse.of("password changed."));
     }
 }

@@ -49,4 +49,7 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
             "order by likes desc")
     List<Feed> findAllOrderByLikes(@Param("categoryName") String categories, @Param("feedId") Long feedId, Pageable pageable);
 
+    List<Feed> findAllByAuthor(User author);
+
+    List<Feed> findAllByLikesIn(List<Like> likes);
 }

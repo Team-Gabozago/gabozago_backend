@@ -1,14 +1,15 @@
 package com.gabozago.backend.user.interfaces;
 
+import com.gabozago.backend.common.exception.ImageNotSavedException;
+import com.gabozago.backend.image.service.S3Service;
+import com.gabozago.backend.user.domain.ProfileImage;
 import com.gabozago.backend.user.domain.User;
-import com.gabozago.backend.user.interfaces.dto.ProfileResponse;
-import com.gabozago.backend.user.interfaces.dto.ProfileUpdateRequest;
-import com.gabozago.backend.user.service.FileStorageService;
+import com.gabozago.backend.user.interfaces.dto.*;
 
 import com.gabozago.backend.user.service.FavoriteService;
 import com.gabozago.backend.user.service.ProfileService;
+import com.gabozago.backend.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,17 +17,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/profile")
 @RequiredArgsConstructor
 public class ProfileController {
-    private final FileStorageService storageService;
-
     private final FavoriteService favoriteService;
 
     private final ProfileService profileService;
+
+    private final S3Service s3Service;
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ProfileResponse> getProfile(@AuthenticationPrincipal User user) {
@@ -38,49 +38,58 @@ public class ProfileController {
     }
 
     @PatchMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> update(@AuthenticationPrincipal User user, final @Valid @RequestBody ProfileUpdateRequest profileUpdateRequest) {
+    public ResponseEntity<ProfileUpdateResponse> update(@AuthenticationPrincipal User user, final @Valid @RequestBody ProfileUpdateRequest profileUpdateRequest) {
         profileService.update(user, profileUpdateRequest);
 
-        return ResponseEntity.ok("{\"message\": \"profile updated\"}");
+        return ResponseEntity.ok(ProfileUpdateResponse.of("profile updated"));
     }
 
     @PostMapping(value = "/images", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> uploadProfileImage(@AuthenticationPrincipal User user, @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<ProfileImageUploadResponse> uploadProfileImage(@AuthenticationPrincipal User user, @RequestParam("image") MultipartFile image) {
         try {
-            storageService.save(image, user);
-            return ResponseEntity.ok("{\"message\": \"File uploaded successfully\"}");
+            ProfileImage profileImage = s3Service.uploadProfileImage(image, user);
+
+            return ResponseEntity.ok(profileService.saveProfileImage(profileImage, user));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().body("File upload failed");
+            throw new ImageNotSavedException(e.getMessage());
         }
-    }
-
-    @GetMapping(value = "/images/{filename}", produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<Resource> getProfileImage(@AuthenticationPrincipal User user, @PathVariable String filename) {
-        if (user.getProfileImage() == null && Objects.equals(user.getProfileImage().getFileName(), filename)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(storageService.load(filename));
     }
 
     @PatchMapping(value = "/favorites/{categoryId:[\\d]+}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> updateFavorites(@AuthenticationPrincipal User user, @PathVariable Long categoryId) {
+    public ResponseEntity<ProfileUpdateFavoritesResponse> updateFavorites(@AuthenticationPrincipal User user, @PathVariable Long categoryId) {
         favoriteService.addFavorite(user, categoryId);
 
-        return ResponseEntity.ok("{\"message\": \"favorites updated\"}");
+        return ResponseEntity.ok(ProfileUpdateFavoritesResponse.of("favorite updated"));
     }
 
     @DeleteMapping(value = "/favorites/{categoryId:[\\d]+}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deleteFavorites(@AuthenticationPrincipal User user, @PathVariable Long categoryId) {
+    public ResponseEntity<ProfileDeleteFavoritesResponse> deleteFavorites(@AuthenticationPrincipal User user, @PathVariable Long categoryId) {
         favoriteService.deleteFavorite(user, categoryId);
-        return ResponseEntity.ok("{\"message\": \"favorites deleted\"}");
+        return ResponseEntity.ok(ProfileDeleteFavoritesResponse.of("favorite deleted"));
     }
 
     @DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> leave(@AuthenticationPrincipal User user) {
+    public ResponseEntity<ProfileDeleteResponse> leave(@AuthenticationPrincipal User user) {
         profileService.leave(user);
 
-        return ResponseEntity.ok("{\"message\": \"user deleted.\"}");
+        return ResponseEntity.ok(ProfileDeleteResponse.of("profile deleted"));
+    }
+
+    @GetMapping(value = "/feeds", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProfileFeedsResponse> feeds(@AuthenticationPrincipal User user)
+    {
+        return ResponseEntity.ok(profileService.getFeedsByUser(user));
+    }
+
+    @GetMapping(value = "/comments", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProfileCommentsResponse> comments(@AuthenticationPrincipal User user)
+    {
+        return ResponseEntity.ok(profileService.getCommentsByUser(user));
+    }
+
+    @GetMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProfileLikesResponse> favorites(@AuthenticationPrincipal User user)
+    {
+        return ResponseEntity.ok(profileService.getLikesByUser(user));
     }
 }
