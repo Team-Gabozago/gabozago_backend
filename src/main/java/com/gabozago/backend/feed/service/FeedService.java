@@ -1,5 +1,9 @@
 package com.gabozago.backend.feed.service;
 
+import com.gabozago.backend.common.exception.EntityNotFoundException;
+import com.gabozago.backend.common.exception.NotFoundException;
+import com.gabozago.backend.common.exception.UnauthorizedException;
+import com.gabozago.backend.common.response.ErrorCode;
 import com.gabozago.backend.feed.domain.Category;
 import com.gabozago.backend.feed.domain.Feed;
 import com.gabozago.backend.feed.domain.Location;
@@ -8,19 +12,14 @@ import com.gabozago.backend.feed.infrastructure.FeedRepository;
 import com.gabozago.backend.feed.interfaces.dto.FeedCardPaginationResponse;
 import com.gabozago.backend.feed.interfaces.dto.FeedRequest;
 import com.gabozago.backend.feed.interfaces.dto.FeedResponse;
-import com.gabozago.backend.common.exception.EntityNotFoundException;
-import com.gabozago.backend.common.exception.NotFoundException;
-import com.gabozago.backend.common.exception.UnauthorizedException;
-import com.gabozago.backend.common.response.ErrorCode;
 import com.gabozago.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
-
-import java.util.List;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -89,14 +88,8 @@ public class FeedService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorCode.FEED_NOT_FOUND));
     }
 
-    @Transactional(readOnly = true)
-    public List<Feed> findRecentFeeds(long nextFeedId,
-            Pageable pageable) {
-        return feedRepository.findAllFeed(nextFeedId, pageable);
-    }
-
     @Transactional
-    private FeedCardPaginationResponse generateFeedCardPaginationResponse(int countPerPage, List<Feed> findFeeds) {
+    public FeedCardPaginationResponse generateFeedCardPaginationResponse(int countPerPage, List<Feed> findFeeds) {
         if (findFeeds.size() == countPerPage + NEXT_FEED_COUNT) {
             Feed nextFeed = findFeeds.get(countPerPage);
             findFeeds.remove(nextFeed);
@@ -105,11 +98,18 @@ public class FeedService {
         return FeedCardPaginationResponse.of(findFeeds, null);
     }
 
-    @Transactional
-    public FeedCardPaginationResponse findRecentFeeds(long nextFeedId, int countPerPage) {
+    public FeedCardPaginationResponse findRecentFeeds(String categoryName, long nextFeedId, int countPerPage, String sortType) {
         Pageable pageable = PageRequest.of(0, countPerPage + NEXT_FEED_COUNT);
-        List<Feed> findFeeds = findRecentFeeds(nextFeedId, pageable);
+        List<Feed> findFeeds = findRecentFeedsWithCondition(nextFeedId, pageable, categoryName, sortType);
         return generateFeedCardPaginationResponse(countPerPage, findFeeds);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Feed> findRecentFeedsWithCondition(long nextFeedId, Pageable pageable, String categoryName, String sortType) {
+        if (sortType.equals("LIKES")) {
+            return feedRepository.findAllOrderByLikes(categoryName, nextFeedId, pageable);
+        }
+        return feedRepository.findAllOrderByCreatedAt(categoryName, nextFeedId, pageable);
     }
 
 }
