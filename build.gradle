@@ -30,6 +30,7 @@ dependencies {
 	implementation "com.amazonaws:aws-java-sdk-s3:1.12.281" // 이미지 업로드 (AWS용)
 	implementation 'mysql:mysql-connector-java' // beanstalk에서 mysql 시작
 	implementation 'org.springframework.boot:spring-boot-starter-actuator' // beanstalk에서 mysql 시작
+	implementation 'net.minidev:json-smart:2.4.8'
 
 
 	compileOnly 'org.projectlombok:lombok'
