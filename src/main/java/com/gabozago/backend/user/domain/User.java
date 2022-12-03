@@ -6,6 +6,7 @@ import com.gabozago.backend.common.response.ErrorCode;
 import com.gabozago.backend.feed.domain.Comment;
 import com.gabozago.backend.feed.domain.Feed;
 import com.gabozago.backend.feed.domain.Like;
+import com.gabozago.backend.profile.domain.ProfileImage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

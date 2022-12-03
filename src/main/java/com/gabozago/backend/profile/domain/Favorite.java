@@ -1,6 +1,7 @@
-package com.gabozago.backend.user.domain;
+package com.gabozago.backend.profile.domain;
 
 import com.gabozago.backend.feed.domain.Category;
+import com.gabozago.backend.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

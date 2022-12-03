@@ -1,4 +1,4 @@
-package com.gabozago.backend.user.interfaces.dto;
+package com.gabozago.backend.profile.interfaces.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProfileFeedResponse {
+public class FeedResponse {
     private final Long id;
 
     private final AuthorResponse author;
@@ -34,7 +34,7 @@ public class ProfileFeedResponse {
 
     private final LocalDateTime updatedAt;
 
-    public ProfileFeedResponse(AuthorResponse author, Long id, CategoryResponse category, Location location, String title,
+    public FeedResponse(AuthorResponse author, Long id, CategoryResponse category, Location location, String title,
                         String content, int likes, int comments, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.author = author;
         this.id = id;
@@ -48,8 +48,8 @@ public class ProfileFeedResponse {
         this.updatedAt = updatedAt;
     }
 
-    public static ProfileFeedResponse of(User author, Feed feed) {
-        return new ProfileFeedResponse(AuthorResponse.of(author), feed.getId(), CategoryResponse.of(feed.getCategory()),
+    public static FeedResponse of(User author, Feed feed) {
+        return new FeedResponse(AuthorResponse.of(author), feed.getId(), CategoryResponse.of(feed.getCategory()),
                 feed.getLocation(),
                 feed.getTitle(), feed.getContent(),
                 feed.getLikes().size(), feed.getComments().size(), feed.getCreatedAt(), feed.getUpdatedAt());
