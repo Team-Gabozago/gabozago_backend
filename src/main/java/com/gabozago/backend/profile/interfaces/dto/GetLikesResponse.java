@@ -1,4 +1,4 @@
-package com.gabozago.backend.user.interfaces.dto;
+package com.gabozago.backend.profile.interfaces.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -8,19 +8,19 @@ import java.util.List;
 
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProfileLikesResponse {
+public class GetLikesResponse {
     private final String message;
     private final String code;
-    private final List<ProfileFeedResponse> likes;
+    private final List<FeedResponse> likes;
 
-    public ProfileLikesResponse(String message, String code, List<ProfileFeedResponse> likes) {
+    public GetLikesResponse(String message, String code, List<FeedResponse> likes) {
         this.message = message;
         this.code = code;
         this.likes = likes;
     }
 
-    public static ProfileLikesResponse of(String message, String code, List<ProfileFeedResponse> likes) {
-        return new ProfileLikesResponse(message, code, likes);
+    public static GetLikesResponse of(String message, String code, List<FeedResponse> likes) {
+        return new GetLikesResponse(message, code, likes);
     }
 
 }

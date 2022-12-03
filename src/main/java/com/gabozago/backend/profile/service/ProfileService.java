@@ -1,4 +1,4 @@
-package com.gabozago.backend.user.service;
+package com.gabozago.backend.profile.service;
 
 import com.gabozago.backend.common.exception.ConflictException;
 import com.gabozago.backend.feed.domain.Comment;
@@ -7,11 +7,11 @@ import com.gabozago.backend.feed.domain.Like;
 import com.gabozago.backend.feed.infrastructure.CommentRepository;
 import com.gabozago.backend.feed.infrastructure.FeedRepository;
 import com.gabozago.backend.feed.infrastructure.LikeRepository;
-import com.gabozago.backend.user.domain.ProfileImage;
+import com.gabozago.backend.profile.domain.ProfileImage;
+import com.gabozago.backend.profile.interfaces.dto.*;
 import com.gabozago.backend.user.domain.User;
-import com.gabozago.backend.user.infrastructure.ProfileImageRepository;
+import com.gabozago.backend.profile.infrastructure.ProfileImageRepository;
 import com.gabozago.backend.user.infrastructure.UserRepository;
-import com.gabozago.backend.user.interfaces.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ public class ProfileService {
     private final LikeRepository likeRepository;
     private final ProfileImageRepository profileImageRepository;
 
-    public void update(User user, ProfileUpdateRequest request) {
+    public void update(User user, UpdateRequest request) {
         if (userRepository.findByNickname(request.getNickname()).isPresent()) {
             throw new ConflictException("Nickname is already taken");
         }
@@ -38,14 +38,14 @@ public class ProfileService {
         userRepository.save(user);
     }
 
-    public ProfileFeedsResponse getFeedsByUser(User user) {
+    public GetFeedsResponse getFeedsByUser(User user) {
         List<Feed> feeds = feedRepository.findAllByAuthor(user);
 
-        List<ProfileFeedResponse> profileFeedResponses = feeds.stream()
-                .map(feed -> ProfileFeedResponse.of(user, feed))
+        List<FeedResponse> profileFeedResponses = feeds.stream()
+                .map(feed -> FeedResponse.of(user, feed))
                 .collect(Collectors.toList());
 
-        return ProfileFeedsResponse.of("피드를 성공적으로 조회했습니다", "FEED_FETCHED", profileFeedResponses);
+        return GetFeedsResponse.of("피드를 성공적으로 조회했습니다", "FEED_FETCHED", profileFeedResponses);
     }
 
     public void leave(User user) {
@@ -53,33 +53,33 @@ public class ProfileService {
         userRepository.save(user);
     }
 
-    public ProfileCommentsResponse getCommentsByUser(User user) {
+    public GetCommentsResponse getCommentsByUser(User user) {
         List<Comment> comments = commentRepository.findAllCommentsByAuthor(user);
 
-        List<ProfileCommentResponse> profileCommentResponses = comments.stream()
-                .map(ProfileCommentResponse::of)
+        List<CommentResponse> profileCommentResponses = comments.stream()
+                .map(CommentResponse::of)
                 .collect(Collectors.toList());
 
-        return ProfileCommentsResponse.of("댓글을 성공적으로 조회했습니다", "COMMENT_FETCHED", profileCommentResponses);
+        return GetCommentsResponse.of("댓글을 성공적으로 조회했습니다", "COMMENT_FETCHED", profileCommentResponses);
     }
 
 
-    public ProfileLikesResponse getLikesByUser(User user) {
+    public GetLikesResponse getLikesByUser(User user) {
         List<Like> likes = likeRepository.findAllByUser(user);
         List<Feed> feeds = feedRepository.findAllByLikesIn(likes);
 
-        List<ProfileFeedResponse> profileLikeResponses = feeds.stream()
-                .map(feed -> ProfileFeedResponse.of(user, feed))
+        List<FeedResponse> profileLikeResponses = feeds.stream()
+                .map(feed -> FeedResponse.of(user, feed))
                 .collect(Collectors.toList());
 
-        return ProfileLikesResponse.of("좋아요를 성공적으로 조회했습니다", "LIKE_FETCHED", profileLikeResponses);
+        return GetLikesResponse.of("좋아요를 성공적으로 조회했습니다", "LIKE_FETCHED", profileLikeResponses);
     }
 
-    public ProfileImageUploadResponse saveProfileImage(ProfileImage profileImage, User user) {
+    public UploadProfileImageResponse saveProfileImage(ProfileImage profileImage, User user) {
         profileImageRepository.save(profileImage);
         user.updateProfileImage(profileImage);
         userRepository.save(user);
 
-        return ProfileImageUploadResponse.of(profileImage);
+        return UploadProfileImageResponse.of(profileImage);
     }
 }

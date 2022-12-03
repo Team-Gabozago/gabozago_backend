@@ -2,7 +2,7 @@ package com.gabozago.backend.image.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.gabozago.backend.user.domain.ProfileImage;
+import com.gabozago.backend.profile.domain.ProfileImage;
 import com.gabozago.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
