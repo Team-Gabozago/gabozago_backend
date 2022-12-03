@@ -1,14 +1,13 @@
-package com.gabozago.backend.user.interfaces;
+package com.gabozago.backend.profile.interfaces;
 
 import com.gabozago.backend.common.exception.ImageNotSavedException;
 import com.gabozago.backend.image.service.S3Service;
-import com.gabozago.backend.user.domain.ProfileImage;
+import com.gabozago.backend.profile.domain.ProfileImage;
+import com.gabozago.backend.profile.interfaces.dto.*;
 import com.gabozago.backend.user.domain.User;
-import com.gabozago.backend.user.interfaces.dto.*;
 
-import com.gabozago.backend.user.service.FavoriteService;
-import com.gabozago.backend.user.service.ProfileService;
-import com.gabozago.backend.user.service.UserService;
+import com.gabozago.backend.profile.service.FavoriteService;
+import com.gabozago.backend.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +28,8 @@ public class ProfileController {
     private final S3Service s3Service;
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileResponse> getProfile(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(ProfileResponse.of(
+    public ResponseEntity<FindResponse> find(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(FindResponse.of(
                 user,
                 favoriteService.getFavoritesByUserId(user.getId()),
                 favoriteService.getAllCategories()
@@ -38,14 +37,21 @@ public class ProfileController {
     }
 
     @PatchMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileUpdateResponse> update(@AuthenticationPrincipal User user, final @Valid @RequestBody ProfileUpdateRequest profileUpdateRequest) {
+    public ResponseEntity<UpdateResponse> update(@AuthenticationPrincipal User user, final @Valid @RequestBody UpdateRequest profileUpdateRequest) {
         profileService.update(user, profileUpdateRequest);
 
-        return ResponseEntity.ok(ProfileUpdateResponse.of("profile updated"));
+        return ResponseEntity.ok(UpdateResponse.of("profile updated"));
+    }
+
+    @DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DeleteResponse> leave(@AuthenticationPrincipal User user) {
+        profileService.leave(user);
+
+        return ResponseEntity.ok(DeleteResponse.of("profile deleted"));
     }
 
     @PostMapping(value = "/images", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileImageUploadResponse> uploadProfileImage(@AuthenticationPrincipal User user, @RequestParam("image") MultipartFile image) {
+    public ResponseEntity<UploadProfileImageResponse> uploadProfileImage(@AuthenticationPrincipal User user, @RequestParam("image") MultipartFile image) {
         try {
             ProfileImage profileImage = s3Service.uploadProfileImage(image, user);
 
@@ -55,40 +61,33 @@ public class ProfileController {
         }
     }
 
-    @PatchMapping(value = "/favorites/{categoryId:[\\d]+}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileUpdateFavoritesResponse> updateFavorites(@AuthenticationPrincipal User user, @PathVariable Long categoryId) {
+    @PatchMapping(value = "/favorites/{categoryId:\\d+}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UpdateFavoritesResponse> updateFavorites(@AuthenticationPrincipal User user, @PathVariable Long categoryId) {
         favoriteService.addFavorite(user, categoryId);
 
-        return ResponseEntity.ok(ProfileUpdateFavoritesResponse.of("favorite updated"));
+        return ResponseEntity.ok(UpdateFavoritesResponse.of("favorite updated"));
     }
 
-    @DeleteMapping(value = "/favorites/{categoryId:[\\d]+}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileDeleteFavoritesResponse> deleteFavorites(@AuthenticationPrincipal User user, @PathVariable Long categoryId) {
+    @DeleteMapping(value = "/favorites/{categoryId:\\d+}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DeleteFavoritesResponse> deleteFavorites(@AuthenticationPrincipal User user, @PathVariable Long categoryId) {
         favoriteService.deleteFavorite(user, categoryId);
-        return ResponseEntity.ok(ProfileDeleteFavoritesResponse.of("favorite deleted"));
-    }
-
-    @DeleteMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileDeleteResponse> leave(@AuthenticationPrincipal User user) {
-        profileService.leave(user);
-
-        return ResponseEntity.ok(ProfileDeleteResponse.of("profile deleted"));
+        return ResponseEntity.ok(DeleteFavoritesResponse.of("favorite deleted"));
     }
 
     @GetMapping(value = "/feeds", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileFeedsResponse> feeds(@AuthenticationPrincipal User user)
+    public ResponseEntity<GetFeedsResponse> feeds(@AuthenticationPrincipal User user)
     {
         return ResponseEntity.ok(profileService.getFeedsByUser(user));
     }
 
     @GetMapping(value = "/comments", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileCommentsResponse> comments(@AuthenticationPrincipal User user)
+    public ResponseEntity<GetCommentsResponse> comments(@AuthenticationPrincipal User user)
     {
         return ResponseEntity.ok(profileService.getCommentsByUser(user));
     }
 
     @GetMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProfileLikesResponse> favorites(@AuthenticationPrincipal User user)
+    public ResponseEntity<GetLikesResponse> favorites(@AuthenticationPrincipal User user)
     {
         return ResponseEntity.ok(profileService.getLikesByUser(user));
     }

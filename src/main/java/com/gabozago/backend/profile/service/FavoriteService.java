@@ -1,4 +1,4 @@
-package com.gabozago.backend.user.service;
+package com.gabozago.backend.profile.service;
 
 import com.gabozago.backend.common.exception.ConflictException;
 import com.gabozago.backend.common.exception.EntityNotFoundException;
@@ -6,12 +6,11 @@ import com.gabozago.backend.common.response.ErrorCode;
 import com.gabozago.backend.feed.domain.Category;
 import com.gabozago.backend.feed.infrastructure.CategoryRepository;
 import com.gabozago.backend.user.domain.User;
-import com.gabozago.backend.user.domain.Favorite;
-import com.gabozago.backend.user.infrastructure.FavoriteRepository;
+import com.gabozago.backend.profile.domain.Favorite;
+import com.gabozago.backend.profile.infrastructure.FavoriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service

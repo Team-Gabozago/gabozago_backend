@@ -1,16 +1,15 @@
-package com.gabozago.backend.user.interfaces.dto;
+package com.gabozago.backend.profile.interfaces.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.gabozago.backend.feed.domain.Feed;
-import com.gabozago.backend.user.domain.User;
+import com.gabozago.backend.feed.domain.Comment;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ProfileLikeResponse {
+public class CommentResponse {
     private final Long id;
     private final String content;
     private final boolean feedAuthor;
@@ -18,7 +17,7 @@ public class ProfileLikeResponse {
     private final boolean modified;
     private final Long feedId;
 
-    public ProfileLikeResponse(Long id, String content, boolean feedAuthor, LocalDateTime createdAt, boolean modified, Long feedId) {
+    public CommentResponse(Long id, String content, boolean feedAuthor, LocalDateTime createdAt, boolean modified, Long feedId) {
         this.id = id;
         this.content = content;
         this.feedAuthor = feedAuthor;
@@ -27,14 +26,14 @@ public class ProfileLikeResponse {
         this.feedId = feedId;
     }
 
-    public static ProfileLikeResponse of(Feed feed, User user) {
-        return new ProfileLikeResponse(
-                feed.getId(),
-                feed.getContent(),
-                feed.isAuthor(user),
-                feed.getCreatedAt(),
-                feed.isModified(),
-                feed.getId()
+    public static CommentResponse of(Comment comment) {
+        return new CommentResponse(
+                comment.getId(),
+                comment.getContent(),
+                comment.isFeedAuthor(),
+                comment.getCreatedAt(),
+                comment.isModified(),
+                comment.getFeed().getId()
         );
     }
 }

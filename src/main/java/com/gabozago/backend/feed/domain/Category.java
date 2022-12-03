@@ -1,6 +1,6 @@
 package com.gabozago.backend.feed.domain;
 
-import com.gabozago.backend.user.domain.Favorite;
+import com.gabozago.backend.profile.domain.Favorite;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

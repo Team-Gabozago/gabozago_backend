@@ -1,6 +1,6 @@
-package com.gabozago.backend.user.infrastructure;
+package com.gabozago.backend.profile.infrastructure;
 
-import com.gabozago.backend.user.domain.Favorite;
+import com.gabozago.backend.profile.domain.Favorite;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
