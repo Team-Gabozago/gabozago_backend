@@ -50,6 +50,12 @@ public class User implements UserDetails {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "latitude")
+    private double latitude;
+
+    @Column(name = "longitude")
+    private double longitude;
+
     @OneToOne
     @JoinColumn(name = "profile_image_id")
     private ProfileImage profileImage;
@@ -185,6 +191,12 @@ public class User implements UserDetails {
             return false;
         User user = (User) o;
         return Objects.equals(id, user.id);
+    }
+
+    public void setLocation(Double latitude, Double longitude) {
+
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
 }
