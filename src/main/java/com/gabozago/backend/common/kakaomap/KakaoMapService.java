@@ -1,7 +1,9 @@
 package com.gabozago.backend.common.kakaomap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gabozago.backend.common.exception.NotFoundException;
 import com.gabozago.backend.common.kakaomap.dto.KakaoMapResponse;
+import com.gabozago.backend.common.response.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +28,7 @@ public class KakaoMapService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
-    public Object getPlaceName(Double latitude, Double longitude){
+    public Map<String, Object> getPlaceName(Double latitude, Double longitude){
 
         // https://developers.kakao.com/docs/latest/ko/local/dev-guide#coord-to-district
 
@@ -66,8 +68,8 @@ public class KakaoMapService {
         } catch (Exception e){
             log.error(e.getMessage());
         }
-        return "Error";
 
+        throw new NotFoundException(ErrorCode.KAKAO_PLACE_NOT_FOUND);
     }
 
 }
