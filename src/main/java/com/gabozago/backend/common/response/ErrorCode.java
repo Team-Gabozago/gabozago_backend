@@ -35,7 +35,11 @@ public enum ErrorCode {
 
     CATEGORY_ALREADY_EXISTS("이미 존재하는 카테고리입니다."),
 
-    CATEGORY_NOT_EXISTS("존재하지 않는 카테고리입니다.");
+    CATEGORY_NOT_EXISTS("존재하지 않는 카테고리입니다."),
+
+    USER_LOCATION_NOT_FOUND("유저의 장소가 존재하지 않습니다."),
+
+    KAKAO_PLACE_NOT_FOUND("카카오 장소를 찾을 수 없습니다.");
 
     private final String errorMsg;
 
