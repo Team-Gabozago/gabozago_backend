@@ -7,7 +7,9 @@ import javax.validation.constraints.Pattern;
 @Data
 public class RecentRequestParams {
 
-    private String categoryName = "";
+    private String categories = "";
+
+    private String sortType = "";
 
     @Pattern(regexp = "^[1-9][0-9]*$")
     private String nextFeedId = "10";
@@ -16,10 +18,12 @@ public class RecentRequestParams {
     private String countPerPage = "10";
 
 
-    private String sortType = "NEWEST";
-
     public String getCategories() {
-        return categoryName;
+        return categories;
+    }
+
+    public String getSortType() {
+        return sortType;
     }
 
     public long getNextFeedId() {

@@ -12,6 +12,8 @@ import com.gabozago.backend.feed.infrastructure.FeedRepository;
 import com.gabozago.backend.feed.interfaces.dto.FeedCardPaginationResponse;
 import com.gabozago.backend.feed.interfaces.dto.FeedRequest;
 import com.gabozago.backend.feed.interfaces.dto.FeedResponse;
+import com.gabozago.backend.feed.service.searchstrategy.SearchStrategy;
+import com.gabozago.backend.feed.service.searchstrategy.SearchStrategyFactory;
 import com.gabozago.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -98,18 +100,13 @@ public class FeedService {
         return FeedCardPaginationResponse.of(findFeeds, null);
     }
 
-    public FeedCardPaginationResponse findRecentFeeds(String categoryName, long nextFeedId, int countPerPage, String sortType) {
+    @Transactional(readOnly = true)
+    public FeedCardPaginationResponse findRecentFeeds(String categories, long nextFeedId, int countPerPage, String sortType)  {
         Pageable pageable = PageRequest.of(0, countPerPage + NEXT_FEED_COUNT);
-        List<Feed> findFeeds = findRecentFeedsWithCondition(nextFeedId, pageable, categoryName, sortType);
+        SearchStrategy searchStrategy = SearchStrategyFactory.of(categories).findStrategy();
+        List<Feed> findFeeds = searchStrategy.searchWithCondition(categories, sortType, nextFeedId, pageable);
         return generateFeedCardPaginationResponse(countPerPage, findFeeds);
     }
 
-    @Transactional(readOnly = true)
-    public List<Feed> findRecentFeedsWithCondition(long nextFeedId, Pageable pageable, String categoryName, String sortType) {
-        if (sortType.equals("LIKES")) {
-            return feedRepository.findAllOrderByLikes(categoryName, nextFeedId, pageable);
-        }
-        return feedRepository.findAllOrderByCreatedAt(categoryName, nextFeedId, pageable);
-    }
 
 }
