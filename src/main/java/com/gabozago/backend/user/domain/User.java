@@ -200,4 +200,7 @@ public class User implements UserDetails {
         this.longitude = longitude;
     }
 
+    public boolean hasLocation() {
+        return this.latitude != 0 && this.longitude != 0;
+    }
 }
