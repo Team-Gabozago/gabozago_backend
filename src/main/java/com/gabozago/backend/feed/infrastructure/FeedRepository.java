@@ -1,6 +1,8 @@
 package com.gabozago.backend.feed.infrastructure;
 
 import com.gabozago.backend.feed.domain.Feed;
+import com.gabozago.backend.feed.domain.Like;
+import com.gabozago.backend.user.domain.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,20 +36,38 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     @Query("select distinct feed " +
             "from Feed as feed " +
             "join fetch feed.author " +
-            "join feed.category c " +
+//            "join feed.category c " +
             "where feed.id <= :feedId " +
-            "and c.name in :categoryName " +
             "order by feed.createdAt desc")
-    List<Feed> findAllOrderByCreatedAt(@Param("categoryName") String categories, @Param("feedId") Long feedId, Pageable pageable);
+    List<Feed> findAllOrderByCreatedAt(@Param("feedId") Long feedId, Pageable pageable);
 
     @Query("select distinct feed, feed.likes.size as likes " +
             "from Feed as feed " +
             "join fetch feed.author " +
-            "join feed.category c " +
+//            "join feed.category c " +
             "where feed.id <= :feedId " +
-            "and c.name in :categoryName " +
             "order by likes desc")
-    List<Feed> findAllOrderByLikes(@Param("categoryName") String categories, @Param("feedId") Long feedId, Pageable pageable);
+    List<Feed> findAllOrderByLikes(@Param("feedId") Long feedId, Pageable pageable);
+
+    @Query("select distinct feed " +
+            "from Feed as feed " +
+            "join fetch feed.author " +
+            "join feed.category fc " +
+            "where feed.id <= :nextFeedId " +
+//            "and (upper(feed.title) like upper(concat('%', :query, '%')) or upper(feed.content) like upper(concat('%', :query, '%'))) " +
+            "and fc.name in :categoryNames " +
+            "order by feed.createdAt desc, feed.id desc")
+    List<Feed> findByCategoriesOrderByCreatedAt(List<String> categoryNames, Long nextFeedId, Pageable pageable);
+
+    @Query("select distinct feed , feed.likes.size as likes " +
+            "from Feed as feed " +
+            "join fetch feed.author " +
+            "join feed.category fc " +
+            "where feed.id <= :nextFeedId " +
+//            "and (upper(feed.title) like upper(concat('%', :query, '%')) or upper(feed.content) like upper(concat('%', :query, '%'))) " +
+            "and fc.name in :categoryNames " +
+            "order by likes desc")
+    List<Feed> findByCategoriesOrderByLikes(List<String> categoryNames, Long nextFeedId, Pageable pageable);
 
     List<Feed> findAllByAuthor(User author);
 
