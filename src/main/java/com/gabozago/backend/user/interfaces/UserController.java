@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @PostMapping("/location")
-    public ResponseEntity<?> setlocation(@AuthenticationPrincipal User user,
+    public ResponseEntity<?> setLocation(@AuthenticationPrincipal User user,
                                           @RequestParam("latitude") Double latitude,
                                           @RequestParam("longitude")Double longitude){
 
