@@ -1,9 +1,11 @@
 package com.gabozago.backend.feed.interfaces;
 
+import com.gabozago.backend.feed.domain.Category;
 import com.gabozago.backend.feed.interfaces.dto.FeedCardPaginationResponse;
 import com.gabozago.backend.feed.interfaces.dto.FeedRequest;
 import com.gabozago.backend.feed.interfaces.dto.FeedResponse;
 import com.gabozago.backend.feed.interfaces.dto.RecentRequestParams;
+import com.gabozago.backend.feed.service.CategoryService;
 import com.gabozago.backend.feed.service.FeedService;
 import com.gabozago.backend.feed.service.LikeService;
 import com.gabozago.backend.user.domain.User;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +26,8 @@ public class FeedController {
 
     private final FeedService feedService;
     private final LikeService likeService;
+
+    private final CategoryService categoryService;
 
     @PostMapping
     public ResponseEntity<FeedRequest> registerFeed(@AuthenticationPrincipal User user,
@@ -70,6 +75,12 @@ public class FeedController {
                 recentRequestParams.getCountPerPage(),
                 recentRequestParams.getSortType());
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/categories")
+    public ResponseEntity<List<Category>> retrieveAllCategory() {
+        List<Category> categories = categoryService.findAll();
+        return ResponseEntity.ok(categories);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.gabozago.backend.feed.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gabozago.backend.profile.domain.Favorite;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,9 +24,11 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Feed> feeds = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Favorite> users = new ArrayList<>();
 
