@@ -7,11 +7,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,15 +32,22 @@ public class FeedRequest {
     @NotNull(message = "경도는 빈 값일 수 없습니다.")
     private Double latitude;
 
+    private String place;
+
+    private String placeDetail;
+
     private List<String> images = new ArrayList<>();
 
-    public FeedRequest(Long categoryId, String title, String content, Double longitude, Double latitude,
+    public FeedRequest(Long categoryId, String title, String content,
+                       Double longitude, Double latitude, String place, String placeDetail,
             List<String> images) {
         this.categoryId = categoryId;
         this.title = title;
         this.content = content;
         this.longitude = longitude;
         this.latitude = latitude;
+        this.place = place;
+        this.placeDetail = placeDetail;
         this.images = images;
     }
 
@@ -50,7 +56,7 @@ public class FeedRequest {
                 .category(category)
                 .title(this.title)
                 .content(this.content)
-                .location(new Location(this.longitude, this.latitude))
+                .location(new Location(this.longitude, this.latitude, this.place, this.placeDetail))
                 .build();
     }
 }

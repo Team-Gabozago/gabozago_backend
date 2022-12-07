@@ -58,7 +58,7 @@ public class FeedService {
                 category,
                 request.getTitle(),
                 request.getContent(),
-                new Location(request.getLongitude(), request.getLatitude()));
+                new Location(request.getLongitude(), request.getLatitude(), request.getPlace(), request.getPlaceDetail()));
         // TODO: 이미지 업데이트
     }
 
@@ -101,12 +101,12 @@ public class FeedService {
     }
 
     @Transactional(readOnly = true)
-    public FeedCardPaginationResponse findRecentFeeds(String categories, long nextFeedId, int countPerPage, String sortType)  {
+    public FeedCardPaginationResponse findRecentFeeds(String categories, long nextFeedId, int countPerPage,
+            String sortType) {
         Pageable pageable = PageRequest.of(0, countPerPage + NEXT_FEED_COUNT);
         SearchStrategy searchStrategy = SearchStrategyFactory.of(categories).findStrategy();
         List<Feed> findFeeds = searchStrategy.searchWithCondition(categories, sortType, nextFeedId, pageable);
         return generateFeedCardPaginationResponse(countPerPage, findFeeds);
     }
-
 
 }
