@@ -1,11 +1,14 @@
 package com.gabozago.backend.feed.domain;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 
 import javax.persistence.Embeddable;
 
 @Embeddable
 @Getter
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class Location {
 
     private double longitude;

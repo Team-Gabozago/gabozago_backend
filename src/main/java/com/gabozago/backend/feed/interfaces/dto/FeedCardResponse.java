@@ -1,5 +1,7 @@
 package com.gabozago.backend.feed.interfaces.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.gabozago.backend.feed.domain.Feed;
 import lombok.Getter;
 
@@ -9,10 +11,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class FeedCardResponse {
+
     private final AuthorResponse author;
+
     private final Long id;
+
     private final String title;
+
     private final String content;
 
     // private final String thumbnailUrl;
@@ -23,8 +30,8 @@ public class FeedCardResponse {
 
     private final LocalDateTime updatedAt;
 
-
-    public FeedCardResponse(AuthorResponse author, Long id, String title, String content, int likes, int comments, LocalDateTime updatedAt) {
+    public FeedCardResponse(AuthorResponse author, Long id, String title, String content, int likes, int comments,
+            LocalDateTime updatedAt) {
         this.author = author;
         this.id = id;
         this.title = title;

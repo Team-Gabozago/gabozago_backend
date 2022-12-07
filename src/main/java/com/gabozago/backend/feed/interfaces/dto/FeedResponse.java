@@ -1,5 +1,7 @@
 package com.gabozago.backend.feed.interfaces.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.gabozago.backend.feed.domain.Feed;
 import com.gabozago.backend.category.CategoryResponse;
 import com.gabozago.backend.user.domain.User;
@@ -9,6 +11,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @Getter
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class FeedResponse {
 
     private final AuthorResponse author;
