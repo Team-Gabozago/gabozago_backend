@@ -1,5 +1,7 @@
 package com.gabozago.backend.feed.interfaces.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.gabozago.backend.feed.domain.Comment;
 import com.gabozago.backend.user.domain.User;
 import lombok.Getter;
@@ -12,20 +14,23 @@ import java.util.stream.Collectors;
 public class ReplyResponse {
 
     private final Long id;
+
     private final String content;
+
     private final boolean feedAuthor;
-    private final LocalDateTime createdAt;
-//    private final boolean modified;
+
+    private final LocalDateTime updatedAt;
+
     private final Long commentId;
+
     private final AuthorResponse author;
 
-    public ReplyResponse(Long id, String content, boolean feedAuthor, LocalDateTime createdAt,
+    public ReplyResponse(Long id, String content, boolean feedAuthor, LocalDateTime updatedAt,
             Long commentId, AuthorResponse author) {
         this.id = id;
         this.content = content;
         this.feedAuthor = feedAuthor;
-        this.createdAt = createdAt;
-//        this.modified = modified;
+        this.updatedAt = updatedAt;
         this.commentId = commentId;
         this.author = author;
     }
@@ -35,8 +40,7 @@ public class ReplyResponse {
                 reply.getId(),
                 reply.getContent(),
                 reply.isFeedAuthor(),
-                reply.getCreatedAt(),
-//                reply.isModified(),
+                reply.getUpdatedAt(),
                 reply.getParent().getId(),
                 AuthorResponse.of(reply.getAuthor()));
     }
