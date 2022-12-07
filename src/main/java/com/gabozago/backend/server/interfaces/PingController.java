@@ -1,4 +1,4 @@
-package com.gabozago.backend.controller;
+package com.gabozago.backend.server.interfaces;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
