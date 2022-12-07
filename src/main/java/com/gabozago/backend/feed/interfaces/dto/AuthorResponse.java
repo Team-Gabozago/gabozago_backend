@@ -7,18 +7,19 @@ import lombok.Getter;
 public class AuthorResponse {
 
     private final Long id;
+
     private final String nickname;
 
-    // private final String imageUrl;
+    private final String path;
 
-    public AuthorResponse(Long id, String nickname) {
+    public AuthorResponse(Long id, String nickname, String path) {
         this.id = id;
         this.nickname = nickname;
-        // this.imageUrl = imageUrl;
+         this.path = "https://wontu-images.s3.ap-northeast-2.amazonaws.com" + path;
     }
 
     public static AuthorResponse of(User author) {
-        return new AuthorResponse(author.getId(), author.getNickName());
+        return new AuthorResponse(author.getId(), author.getNickName(), author.getProfileImage().getPath());
     }
 
 }
