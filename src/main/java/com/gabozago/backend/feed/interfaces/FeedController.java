@@ -31,7 +31,7 @@ public class FeedController {
 
     @PostMapping
     public ResponseEntity<FeedRequest> registerFeed(@AuthenticationPrincipal User user,
-            @ModelAttribute @Valid FeedRequest request) {
+            @RequestBody @Valid FeedRequest request) {
         Long feedId = feedService.create(user, request);
         return ResponseEntity.created(URI.create("/feeds/" + feedId)).build();
     }
@@ -44,7 +44,7 @@ public class FeedController {
 
     @PutMapping("/{feedId:[\\d]+}")
     public ResponseEntity<Void> update(@AuthenticationPrincipal User user, @PathVariable Long feedId,
-            @ModelAttribute @Valid FeedRequest request) {
+            @RequestBody @Valid FeedRequest request) {
         feedService.update(user, feedId, request);
         return ResponseEntity.ok().build();
     }
@@ -68,10 +68,11 @@ public class FeedController {
     }
 
     @GetMapping("/recent")
-    public ResponseEntity<FeedCardPaginationResponse> retrieveAllFeed(@AuthenticationPrincipal User user, @Valid RecentRequestParams recentRequestParams) {
+    public ResponseEntity<FeedCardPaginationResponse> retrieveAllFeed(@AuthenticationPrincipal User user,
+            @Valid RecentRequestParams recentRequestParams) {
 
         FeedCardPaginationResponse response = feedService.findRecentFeeds(
-                recentRequestParams.getCategories() ,
+                recentRequestParams.getCategories(),
                 recentRequestParams.getKeyword(),
                 recentRequestParams.getNextFeedId(),
                 recentRequestParams.getCountPerPage(),
