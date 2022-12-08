@@ -72,4 +72,22 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     List<Feed> findAllByAuthor(User author);
 
     List<Feed> findAllByLikesIn(List<Like> likes);
+
+    @Query("select distinct feed " +
+            "from Feed as feed " +
+            "join fetch feed.author " +
+            "where feed.id <= :nextFeedId " +
+            "and feed.content like concat('%',:keyword,'%') " +
+            "order by feed.createdAt desc, feed.id desc")
+    List<Feed> findByKeywordOrderByCreatedAt(@Param("keyword") String keyword, @Param("nextFeedId") Long nextFeedId, Pageable pageable);
+
+    @Query("select distinct feed , feed.likes.size as likes " +
+            "from Feed as feed " +
+            "join fetch feed.author " +
+            "where feed.id <= :nextFeedId " +
+            "and feed.content like concat('%',:keyword,'%') " +
+            "order by likes desc")
+    List<Feed> findByKeywordOrderByLikes(@Param("keyword") String keyword, @Param("nextFeedId") Long nextFeedId, Pageable pageable);
+
 }
+

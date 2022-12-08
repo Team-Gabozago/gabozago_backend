@@ -6,17 +6,18 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-public class NoneStrategy extends SearchStrategy {
+public class KeywordOnlyStrategy extends SearchStrategy{
 
-    protected NoneStrategy(FeedRepository feedRepository) {
+    protected KeywordOnlyStrategy(FeedRepository feedRepository) {
         super(feedRepository);
     }
 
     @Override
     public List<Feed> searchWithCondition(String categories, String keyword, String sortType, Long nextFeedId, Pageable pageable) {
         if (sortType.equals(FeedSortType.NEWEST)) {
-            return feedRepository.findAllOrderByCreatedAt(nextFeedId, pageable);
+            return feedRepository.findByKeywordOrderByCreatedAt(keyword, nextFeedId, pageable);
         }
-        return feedRepository.findAllOrderByLikes(nextFeedId, pageable);
+        return feedRepository.findByKeywordOrderByLikes(keyword, nextFeedId, pageable);
     }
 }
+

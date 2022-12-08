@@ -22,4 +22,9 @@ public class SearchStrategyConfig {
         return new CategoriesOnlyStrategy(feedRepository);
     }
 
+    @Bean
+    public KeywordOnlyStrategy createKeywordOnlyStrategy() {
+        return new KeywordOnlyStrategy(feedRepository);
+    }
+
 }
