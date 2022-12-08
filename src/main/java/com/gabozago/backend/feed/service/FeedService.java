@@ -4,10 +4,7 @@ import com.gabozago.backend.common.exception.EntityNotFoundException;
 import com.gabozago.backend.common.exception.NotFoundException;
 import com.gabozago.backend.common.exception.UnauthorizedException;
 import com.gabozago.backend.common.response.ErrorCode;
-import com.gabozago.backend.feed.domain.Category;
-import com.gabozago.backend.feed.domain.Feed;
-import com.gabozago.backend.feed.domain.Image;
-import com.gabozago.backend.feed.domain.Location;
+import com.gabozago.backend.feed.domain.*;
 import com.gabozago.backend.feed.infrastructure.CategoryRepository;
 import com.gabozago.backend.feed.infrastructure.FeedRepository;
 import com.gabozago.backend.feed.interfaces.dto.FeedCardPaginationResponse;
@@ -44,10 +41,11 @@ public class FeedService {
         Feed feed = request.toEntity(category).writtenBy(user);
         Feed savedFeed = feedRepository.save(feed);
 
-        // 이미지 처리 임시
+        // 이미지 등록
         request.getImages().stream().forEach(imageUrl -> {
             Image image = Image.builder()
                     .filePath(imageUrl)
+                    .state("ACTIVE")
                     .build().writtenBy(savedFeed);
             imageRepository.save(image);
         });
@@ -71,7 +69,22 @@ public class FeedService {
                 new Location(request.getLongitude(), request.getLatitude(), request.getPlace(),
                         request.getPlaceDetail()));
 
-        // TODO: 이미지 업데이트
+        // 이미지 삭제
+        List<Image> findImages = imageRepository.findAllByFeed(findFeed);
+        findImages.stream().forEach(image -> {
+            findFeed.deleteImage(image);
+            image.delete();
+            imageRepository.saveAndFlush(image);
+        });
+
+        // 이미지 업데이트
+        request.getImages().stream().forEach(imageUrl -> {
+            Image image = Image.builder()
+                    .filePath(imageUrl)
+                    .state("ACTIVE")
+                    .build().writtenBy(findFeed);
+            imageRepository.save(image);
+        });
     }
 
     @Transactional
@@ -90,10 +103,18 @@ public class FeedService {
             throw new UnauthorizedException(ErrorCode.UNAUTHORIZED_DELETE_FEED);
         }
 
-        // TODO 알림
-        // applicationEventPublisher.publishEvent();
+        // 이미지 삭제
+        // List<Image> findImages = imageRepository.findAllByFeed(findFeed);
+        // findImages.stream().forEach(image -> {
+        // findFeed.deleteImage(image);
+        // image.delete();
+        // imageRepository.saveAndFlush(image);
+        // });
 
         feedRepository.delete(findFeed);
+
+        // TODO 알림
+        // applicationEventPublisher.publishEvent();
     }
 
     @Transactional(readOnly = true)
