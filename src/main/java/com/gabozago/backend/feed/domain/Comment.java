@@ -51,18 +51,18 @@ public class Comment extends AbstractEntity {
         this.content = content;
     }
 
-    public static Comment createReply(String content) {
-        return new Comment(content);
-    }
-
     public void update(String content) {
         this.content = content;
     }
 
-    // public void addReply(Comment reply) {
-    // this.child.add(reply);
-    // reply.parent = this;
-    // }
+    public static Comment createReply(String content) {
+        return new Comment(content);
+    }
+
+    public void addReply(Comment reply) {
+        this.child.add(reply);
+        reply.parent = this;
+    }
 
     public Comment writtenBy(User user, Feed feed) {
         this.author = user;
