@@ -13,10 +13,6 @@ public class Image {
     @Column(name = "image_id", nullable = false)
     private Long id;
 
-    private String origFilename;
-
-    private String filename;
-
     private String filePath;
 
     @ManyToOne
@@ -24,10 +20,14 @@ public class Image {
     private Feed feed;
 
     @Builder
-    public Image (Long id, String origFilename, String filename, String filePath) {
+    public Image(Long id, String filePath) {
         this.id = id;
-        this.origFilename = origFilename;
-        this.filename = filename;
         this.filePath = filePath;
+    }
+
+    public Image writtenBy(Feed feed) {
+        this.feed = feed;
+        feed.addImage(this);
+        return this;
     }
 }

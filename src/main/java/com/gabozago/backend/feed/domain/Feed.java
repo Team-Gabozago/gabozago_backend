@@ -89,6 +89,10 @@ public class Feed extends AbstractEntity {
         return !author.sameAs(user);
     }
 
+    public void addImage(Image image) {
+        this.images.add(image);
+    }
+
     public void addComment(Comment comment) {
         this.comments.add(comment);
     }
