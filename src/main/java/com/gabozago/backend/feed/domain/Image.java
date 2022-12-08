@@ -19,10 +19,21 @@ public class Image {
     @JoinColumn(name = "feed_id")
     private Feed feed;
 
+    private String state;
+
     @Builder
-    public Image(Long id, String filePath) {
+    public Image(Long id, String filePath, String state) {
         this.id = id;
         this.filePath = filePath;
+        this.state = state;
+    }
+
+    public void update(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void delete() {
+        this.state = "INACTIVE";
     }
 
     public Image writtenBy(Feed feed) {
