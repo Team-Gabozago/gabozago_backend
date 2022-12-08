@@ -1,5 +1,6 @@
 package com.gabozago.backend.feed.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gabozago.backend.AbstractEntity;
 import com.gabozago.backend.user.domain.User;
 import lombok.AccessLevel;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-
 import java.util.*;
 
 @Entity
@@ -91,6 +91,10 @@ public class Feed extends AbstractEntity {
 
     public void addImage(Image image) {
         this.images.add(image);
+    }
+
+    public void deleteImage(Image image) {
+        this.images.remove(image);
     }
 
     public void addComment(Comment comment) {
