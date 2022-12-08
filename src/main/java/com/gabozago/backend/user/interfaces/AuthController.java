@@ -1,5 +1,7 @@
 package com.gabozago.backend.user.interfaces;
 
+import com.gabozago.backend.profile.domain.ProfileImage;
+import com.gabozago.backend.profile.service.ProfileService;
 import com.gabozago.backend.user.interfaces.dto.*;
 import com.gabozago.backend.user.interfaces.dto.auth.JoinRequestDto;
 import com.gabozago.backend.user.interfaces.dto.auth.LoginRequestDto;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Collections;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,6 +33,8 @@ public class AuthController {
     private final TokenProvider tokenProvider;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final ProfileService profileService;
 
     @GetMapping("/")
     public ResponseEntity<String> index() {
@@ -58,21 +61,34 @@ public class AuthController {
 
     @PostMapping(path = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> join(final @Valid @RequestBody JoinRequestDto user) {
-        if (userService.checkExistsByEmail(user.getEmail())) {
+    public ResponseEntity<Object> join(final @Valid @RequestBody JoinRequestDto request) {
+        if (userService.checkExistsByEmail(request.getEmail())) {
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.DUPLICATED_EMAIL).parseJson(), HttpStatus.CONFLICT);
         }
 
-        if (userService.checkExistsByNickname(user.getNickname())) {
+        if (userService.checkExistsByNickname(request.getNickname())) {
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.DUPLICATED_NICKNAME).parseJson(), HttpStatus.CONFLICT);
         }
 
-        userService.save(User.builder()
-                .email(user.getEmail())
-                .password(passwordEncoder.encode(user.getPassword()))
-                .nickname(user.getNickname())
+        ProfileImage profileImage = ProfileImage
+                .builder()
+                .fileName("gopher.png")
+                .size(40627L)
+                .path("/uploads/user/profiles/gopher.png")
+                .contentType("image/png")
+                .build();
+
+        profileService.saveProfileImage(profileImage);
+
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .nickname(request.getNickname())
                 .roles(Collections.singletonList("ROLE_USER"))
-                .build());
+                .profileImage(profileImage)
+                .build();
+
+        userService.save(user);
 
         return ResponseEntity.ok(AuthJoinResponse.of("회원가입이 완료되었습니다."));
     }

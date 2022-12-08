@@ -55,7 +55,7 @@ public class ProfileController {
         try {
             ProfileImage profileImage = s3Service.uploadProfileImage(image, user);
 
-            return ResponseEntity.ok(profileService.saveProfileImage(profileImage, user));
+            return ResponseEntity.ok(profileService.updateProfileImage(profileImage, user));
         } catch (Exception e) {
             throw new ImageNotSavedException(e.getMessage());
         }

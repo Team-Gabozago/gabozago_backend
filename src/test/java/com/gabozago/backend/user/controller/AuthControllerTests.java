@@ -1,5 +1,6 @@
 package com.gabozago.backend.user.controller;
 
+import com.gabozago.backend.profile.service.ProfileService;
 import com.gabozago.backend.user.interfaces.dto.auth.JoinRequestDto;
 import com.gabozago.backend.user.interfaces.dto.auth.LoginRequestDto;
 import com.gabozago.backend.user.domain.RefreshToken;
@@ -46,6 +47,9 @@ public class AuthControllerTests {
 
     @MockBean
     private PasswordEncoder passwordEncoder;
+
+    @MockBean
+    private ProfileService profileService;
 
     @Test
     @DisplayName("이메일 유무 체크")

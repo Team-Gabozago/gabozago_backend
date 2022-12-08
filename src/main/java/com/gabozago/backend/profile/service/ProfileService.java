@@ -75,11 +75,15 @@ public class ProfileService {
         return GetLikesResponse.of("좋아요를 성공적으로 조회했습니다", "LIKE_FETCHED", profileLikeResponses);
     }
 
-    public UploadProfileImageResponse saveProfileImage(ProfileImage profileImage, User user) {
+    public UploadProfileImageResponse updateProfileImage(ProfileImage profileImage, User user) {
         profileImageRepository.save(profileImage);
         user.updateProfileImage(profileImage);
         userRepository.save(user);
 
         return UploadProfileImageResponse.of(profileImage);
+    }
+
+    public void saveProfileImage(ProfileImage profileImage) {
+        profileImageRepository.save(profileImage);
     }
 }
