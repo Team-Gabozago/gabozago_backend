@@ -9,6 +9,8 @@ public class RecentRequestParams {
 
     private String categories = "";
 
+    private String keyword = "";
+
     private String sortType = "";
 
     @Pattern(regexp = "^[1-9][0-9]*$")
@@ -17,6 +19,9 @@ public class RecentRequestParams {
     @Pattern(regexp = "^[1-9][0-9]*$")
     private String countPerPage = "10";
 
+    public String getKeyword() {
+        return keyword;
+    }
 
     public String getCategories() {
         return categories;
