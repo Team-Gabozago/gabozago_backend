@@ -25,6 +25,7 @@ import java.util.List;
 public class FeedController {
 
     private final FeedService feedService;
+
     private final LikeService likeService;
 
     private final CategoryService categoryService;
