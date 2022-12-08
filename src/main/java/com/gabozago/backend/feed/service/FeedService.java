@@ -6,6 +6,7 @@ import com.gabozago.backend.common.exception.UnauthorizedException;
 import com.gabozago.backend.common.response.ErrorCode;
 import com.gabozago.backend.feed.domain.Category;
 import com.gabozago.backend.feed.domain.Feed;
+import com.gabozago.backend.feed.domain.Image;
 import com.gabozago.backend.feed.domain.Location;
 import com.gabozago.backend.feed.infrastructure.CategoryRepository;
 import com.gabozago.backend.feed.infrastructure.FeedRepository;
@@ -14,6 +15,7 @@ import com.gabozago.backend.feed.interfaces.dto.FeedRequest;
 import com.gabozago.backend.feed.interfaces.dto.FeedResponse;
 import com.gabozago.backend.feed.service.searchstrategy.SearchStrategy;
 import com.gabozago.backend.feed.service.searchstrategy.SearchStrategyFactory;
+import com.gabozago.backend.image.service.ImageRepository;
 import com.gabozago.backend.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -29,11 +31,11 @@ public class FeedService {
 
     private static final int NEXT_FEED_COUNT = 1;
 
-    // private final ImageService imageService;
-
     private final CategoryRepository categoryRepository;
 
     private final FeedRepository feedRepository;
+
+    private final ImageRepository imageRepository;
 
     @Transactional
     public Long create(User user, FeedRequest request) {
@@ -41,6 +43,14 @@ public class FeedService {
                 .orElseThrow(EntityNotFoundException::new);
         Feed feed = request.toEntity(category).writtenBy(user);
         Feed savedFeed = feedRepository.save(feed);
+
+        // 이미지 처리 임시
+        request.getImages().stream().forEach(imageUrl -> {
+            Image image = Image.builder()
+                    .filePath(imageUrl)
+                    .build().writtenBy(savedFeed);
+            imageRepository.save(image);
+        });
         return savedFeed.getId();
     }
 
@@ -58,7 +68,9 @@ public class FeedService {
                 category,
                 request.getTitle(),
                 request.getContent(),
-                new Location(request.getLongitude(), request.getLatitude(), request.getPlace(), request.getPlaceDetail()));
+                new Location(request.getLongitude(), request.getLatitude(), request.getPlace(),
+                        request.getPlaceDetail()));
+
         // TODO: 이미지 업데이트
     }
 
@@ -101,7 +113,8 @@ public class FeedService {
     }
 
     @Transactional(readOnly = true)
-    public FeedCardPaginationResponse findRecentFeeds(String categories, String keyword, long nextFeedId, int countPerPage,
+    public FeedCardPaginationResponse findRecentFeeds(String categories, String keyword, long nextFeedId,
+            int countPerPage,
             String sortType) {
         Pageable pageable = PageRequest.of(0, countPerPage + NEXT_FEED_COUNT);
         SearchStrategy searchStrategy = SearchStrategyFactory.of(categories, keyword).findStrategy();
