@@ -57,7 +57,8 @@ public class CommentService {
 
         // TODO 알림
         // applicationEventPublisher.publishEvent();
-        user.deleteComment(findComment);
+
+        commentRepository.delete(findComment);
     }
 
 
