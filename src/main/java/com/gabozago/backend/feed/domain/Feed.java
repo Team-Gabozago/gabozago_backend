@@ -1,6 +1,5 @@
 package com.gabozago.backend.feed.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gabozago.backend.AbstractEntity;
 import com.gabozago.backend.user.domain.User;
 import lombok.AccessLevel;
@@ -121,10 +120,6 @@ public class Feed extends AbstractEntity {
         return this.likes.stream()
                 .filter(like -> like.sameAs(user))
                 .findAny();
-    }
-
-    public void delete(Like like) {
-        this.likes.remove(like);
     }
 
     public Map<Comment, List<Comment>> mapByCommentAndReplies() {

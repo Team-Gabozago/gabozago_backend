@@ -13,8 +13,9 @@ public class NoneStrategy extends SearchStrategy {
     }
 
     @Override
-    public List<Feed> searchWithCondition(String categories, String keyword, String sortType, Long nextFeedId, Pageable pageable) {
-        if (sortType.equals(FeedSortType.NEWEST)) {
+    public List<Feed> searchWithCondition(String categories, String keyword, String sortType, Long nextFeedId,
+            Pageable pageable) {
+        if (sortType.equals("NEWEST")) {
             return feedRepository.findAllOrderByCreatedAt(nextFeedId, pageable);
         }
         return feedRepository.findAllOrderByLikes(nextFeedId, pageable);

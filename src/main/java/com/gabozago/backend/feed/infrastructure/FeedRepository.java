@@ -36,15 +36,13 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     @Query("select distinct feed " +
             "from Feed as feed " +
             "join fetch feed.author " +
-//            "join feed.category c " +
             "where feed.id <= :feedId " +
-            "order by feed.createdAt desc")
+            "order by feed.updatedAt desc")
     List<Feed> findAllOrderByCreatedAt(@Param("feedId") Long feedId, Pageable pageable);
 
     @Query("select distinct feed, feed.likes.size as likes " +
             "from Feed as feed " +
             "join fetch feed.author " +
-//            "join feed.category c " +
             "where feed.id <= :feedId " +
             "order by likes desc")
     List<Feed> findAllOrderByLikes(@Param("feedId") Long feedId, Pageable pageable);
@@ -54,9 +52,8 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
             "join fetch feed.author " +
             "join feed.category fc " +
             "where feed.id <= :nextFeedId " +
-//            "and (upper(feed.title) like upper(concat('%', :query, '%')) or upper(feed.content) like upper(concat('%', :query, '%'))) " +
             "and fc.name in :categoryNames " +
-            "order by feed.createdAt desc, feed.id desc")
+            "order by feed.updatedAt desc, feed.id desc")
     List<Feed> findByCategoriesOrderByCreatedAt(List<String> categoryNames, Long nextFeedId, Pageable pageable);
 
     @Query("select distinct feed , feed.likes.size as likes " +
@@ -64,7 +61,6 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
             "join fetch feed.author " +
             "join feed.category fc " +
             "where feed.id <= :nextFeedId " +
-//            "and (upper(feed.title) like upper(concat('%', :query, '%')) or upper(feed.content) like upper(concat('%', :query, '%'))) " +
             "and fc.name in :categoryNames " +
             "order by likes desc")
     List<Feed> findByCategoriesOrderByLikes(List<String> categoryNames, Long nextFeedId, Pageable pageable);

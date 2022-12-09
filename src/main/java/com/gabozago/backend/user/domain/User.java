@@ -76,7 +76,7 @@ public class User implements UserDetails {
     @Builder.Default
     private List<Like> likes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     @Builder.Default
     private List<Comment> comments = new ArrayList<>();
 
@@ -172,16 +172,12 @@ public class User implements UserDetails {
         like.getFeed().addLike(like);
     }
 
-    public void delete(Like like) {
+    public void removeLike(Like like) {
         this.likes.remove(like);
     }
 
     public void addComment(Comment comment) {
         this.comments.add(comment);
-    }
-
-    public void deleteComment(Comment comment) {
-        this.comments.remove(comment);
     }
 
     @Override
