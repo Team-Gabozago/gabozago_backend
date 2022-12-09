@@ -40,7 +40,7 @@ public class LikeService {
         Like findLike = findFeed.findLikeBy(user)
                 .orElseThrow(() -> new BadRequestException(ErrorCode.NOT_LIKED));
         likeRepository.delete(findLike);
-        findFeed.delete(findLike);
-        user.delete(findLike);
+        findFeed.removeLike(findLike);
+        user.removeLike(findLike);
     }
 }
