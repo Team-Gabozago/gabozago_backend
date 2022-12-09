@@ -14,10 +14,10 @@ public class RecentRequestParams {
     private String sortType = "";
 
     @Pattern(regexp = "^[1-9][0-9]*$")
-    private String nextFeedId = "10";
+    private String nextFeedId = "10000000";
 
     @Pattern(regexp = "^[1-9][0-9]*$")
-    private String countPerPage = "10";
+    private String countPerPage = "15";
 
     public String getKeyword() {
         return keyword;
