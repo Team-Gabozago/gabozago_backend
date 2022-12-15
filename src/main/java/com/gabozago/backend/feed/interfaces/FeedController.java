@@ -73,6 +73,7 @@ public class FeedController {
             @Valid RecentRequestParams recentRequestParams) {
 
         FeedCardPaginationResponse response = feedService.findRecentFeeds(
+                user,
                 recentRequestParams.getCategories(),
                 recentRequestParams.getKeyword(),
                 recentRequestParams.getNextFeedId(),
