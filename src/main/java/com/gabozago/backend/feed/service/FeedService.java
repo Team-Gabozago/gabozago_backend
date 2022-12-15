@@ -134,12 +134,12 @@ public class FeedService {
     }
 
     @Transactional(readOnly = true)
-    public FeedCardPaginationResponse findRecentFeeds(String categories, String keyword, long nextFeedId,
+    public FeedCardPaginationResponse findRecentFeeds(User user, String categories, String keyword, long nextFeedId,
             int countPerPage,
             String sortType) {
         Pageable pageable = PageRequest.of(0, countPerPage + NEXT_FEED_COUNT);
         SearchStrategy searchStrategy = SearchStrategyFactory.of(categories, keyword).findStrategy();
-        List<Feed> findFeeds = searchStrategy.searchWithCondition(categories, keyword, sortType, nextFeedId, pageable);
+        List<Feed> findFeeds = searchStrategy.searchWithCondition(user.getLongitude(), user.getLatitude(), categories, keyword, sortType, nextFeedId, pageable);
         return generateFeedCardPaginationResponse(countPerPage, findFeeds);
     }
 

@@ -17,5 +17,5 @@ public abstract class SearchStrategy {
         this.feedRepository = feedRepository;
     }
 
-    public abstract List<Feed> searchWithCondition(String categories, String keyword, String sortType, Long nextFeedId, Pageable pageable);
+    public abstract List<Feed> searchWithCondition(double userLongitude, double userLatitude, String categories, String keyword, String sortType, Long nextFeedId, Pageable pageable);
 }

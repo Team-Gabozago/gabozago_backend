@@ -14,6 +14,7 @@ import java.util.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name="feed")
 public class Feed extends AbstractEntity {
 
     @Id
