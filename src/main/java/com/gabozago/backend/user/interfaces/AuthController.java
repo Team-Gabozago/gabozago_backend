@@ -61,12 +61,12 @@ public class AuthController {
 
     @PostMapping(path = "/join", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> join(final @Valid @RequestBody JoinRequestDto request) {
-        if (userService.checkExistsByEmail(request.getEmail())) {
+    public ResponseEntity<Object> join(final @Valid @RequestBody JoinRequestDto joinRequestDto, HttpServletRequest request) {
+        if (userService.checkExistsByEmail(joinRequestDto.getEmail())) {
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.DUPLICATED_EMAIL).parseJson(), HttpStatus.CONFLICT);
         }
 
-        if (userService.checkExistsByNickname(request.getNickname())) {
+        if (userService.checkExistsByNickname(joinRequestDto.getNickname())) {
             return new ResponseEntity<>(new ErrorResponse(ErrorCode.DUPLICATED_NICKNAME).parseJson(), HttpStatus.CONFLICT);
         }
 
@@ -81,16 +81,26 @@ public class AuthController {
         profileService.saveProfileImage(profileImage);
 
         User user = User.builder()
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .nickname(request.getNickname())
+                .email(joinRequestDto.getEmail())
+                .password(passwordEncoder.encode(joinRequestDto.getPassword()))
+                .nickname(joinRequestDto.getNickname())
                 .roles(Collections.singletonList("ROLE_USER"))
                 .profileImage(profileImage)
                 .build();
 
         userService.save(user);
 
-        return ResponseEntity.ok(AuthJoinResponse.of("회원가입이 완료되었습니다."));
+        String accessToken = tokenProvider.createAccessToken(user.getId(), user.getRoles());
+        RefreshToken refreshToken = tokenProvider.createRefreshTokenEntity(user);
+
+        refreshTokenService.save(refreshToken);
+
+        AuthHttpHeaders headers = new AuthHttpHeaders();
+
+        headers.setAccessToken(accessToken, request);
+        headers.setRefreshToken(refreshToken.getToken(), request);
+
+        return new ResponseEntity<>(AuthLoginResponse.of("회원가입이 완료되었습니다."), headers, HttpStatus.OK);
     }
 
     @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
