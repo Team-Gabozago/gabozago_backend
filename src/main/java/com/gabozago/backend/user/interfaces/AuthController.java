@@ -100,7 +100,7 @@ public class AuthController {
         headers.setAccessToken(accessToken, request);
         headers.setRefreshToken(refreshToken.getToken(), request);
 
-        return new ResponseEntity<>(AuthLoginResponse.of("회원가입이 완료되었습니다."), headers, HttpStatus.OK);
+        return new ResponseEntity<>(AuthJoinResponse.of("회원가입이 완료되었습니다."), headers, HttpStatus.OK);
     }
 
     @PostMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
