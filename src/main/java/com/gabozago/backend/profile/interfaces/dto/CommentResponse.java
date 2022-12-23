@@ -15,16 +15,18 @@ public class CommentResponse {
     private final String feedContent;
     private final String parentContent;
     private final boolean feedAuthor;
+    private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
     private final boolean modified;
     private final Long feedId;
 
-    public CommentResponse(Long id, String content, String feedContent, String parentContent, boolean feedAuthor, LocalDateTime updatedAt, boolean modified, Long feedId) {
+    public CommentResponse(Long id, String content, String feedContent, String parentContent, boolean feedAuthor, LocalDateTime createdAt, LocalDateTime updatedAt, boolean modified, Long feedId) {
         this.id = id;
         this.content = content;
         this.feedContent = feedContent;
         this.parentContent = parentContent;
         this.feedAuthor = feedAuthor;
+        this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.modified = modified;
         this.feedId = feedId;
@@ -43,6 +45,7 @@ public class CommentResponse {
                 comment.getFeed().getContent(),
                 parentContent,
                 comment.isFeedAuthor(),
+                comment.getCreatedAt(),
                 comment.getUpdatedAt(),
                 comment.isModified(),
                 comment.getFeed().getId()
